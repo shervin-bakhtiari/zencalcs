@@ -1,0 +1,33 @@
+# Netlify Configuration File
+# This file tells Netlify how to build and deploy your site
+
+[build]
+  # Since this is a static HTML site, no build command needed
+  publish = "."
+  # Netlify Functions directory for AI Chat
+  functions = "netlify/functions"
+
+[build.environment]
+  # Node version for functions
+  NODE_VERSION = "18"
+  
+[[redirects]]
+  # Redirect all 404 errors to index page
+  from = "/*"
+  to = "/index.html"
+  status = 404
+
+[[headers]]
+  # Apply security and performance headers to all pages
+  for = "/*"
+    [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Cache-Control = "public, max-age=31536000"
+    
+[[headers]]
+  # Don't cache HTML files
+  for = "/*.html"
+    [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

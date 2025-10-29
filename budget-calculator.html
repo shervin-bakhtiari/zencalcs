@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <title>Budget Calculator - Coming Soon | ZenCalcs</title>
+    <meta name="description" content="Budget Calculator - Professional calculator with charts and insights. Coming soon to ZenCalcs.">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YMJ87N3YC3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YMJ87N3YC3');
+    </script>
+    <style>
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8F9FA; min-height: 100vh; color: #2D3748; }
+
+        /* Navigation */
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 30px; position: sticky; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { height: 40px; width: auto; }
+        .nav-right { display: flex; gap: 20px; align-items: center; }
+        .search-box { display: flex; align-items: center; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 16px; min-width: 250px; transition: all 0.3s ease; }
+        .search-box:hover { border-color: #2C5F6F; }
+        .search-box:focus-within { border-color: #2C5F6F; box-shadow: 0 0 0 3px rgba(44, 95, 111, 0.1); }
+        .search-box svg { width: 20px; height: 20px; color: #6B7280; margin-right: 10px; }
+        .search-box input { border: none; outline: none; background: transparent; flex: 1; color: #2D3748; font-size: 0.95em; }
+        .search-box input::placeholder { color: #D1D5DB; }
+        .hamburger { display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px; }
+        .hamburger span { width: 28px; height: 3px; background: #2C5F6F; border-radius: 3px; transition: all 0.3s ease; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; }
+        .mobile-menu.active { display: block; }
+        .mobile-menu-content { position: fixed; top: 0; right: -350px; width: 320px; height: 100vh; background: white; box-shadow: -2px 0 10px rgba(0,0,0,0.1); transition: right 0.3s ease; padding: 80px 20px 20px 20px; overflow-y: auto; }
+        .mobile-menu.active .mobile-menu-content { right: 0; }
+        .search-container { padding: 10px 15px 20px; }
+        .search-input { width: 100%; padding: 12px 15px; border: 2px solid #E5E7EB; border-radius: 8px; font-size: 1em; }
+        .search-input:focus { outline: none; border-color: #2C5F6F; box-shadow: 0 0 0 3px rgba(44, 95, 111, 0.1); }
+        .category-header { font-size: 0.9em; font-weight: 700; color: #6B7280; padding: 15px 20px 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .category-divider { height: 1px; background: #E5E7EB; margin: 10px 0; }
+        .mobile-menu-item { padding: 14px 20px; margin-bottom: 5px; background: #F8F9FA; border-radius: 8px; font-size: 0.95em; font-weight: 500; color: #2C5F6F; text-decoration: none; display: block; transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .mobile-menu-item:hover { background: #E0F2F1; border-left-color: #2C5F6F; transform: translateX(-5px); }
+        .mobile-menu-item.placeholder { opacity: 0.5; cursor: not-allowed; }
+        .mobile-menu-item.placeholder:hover { transform: none; }
+
+        .page-wrapper { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 70px); padding: 20px; }
+        .container { max-width: 700px; padding: 50px 40px; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; }
+        .icon { font-size: 5em; margin-bottom: 20px; }
+        h1 { color: #2D3748; font-size: 2.5em; margin-bottom: 20px; }
+        .coming-soon { background: linear-gradient(135deg, #E89B6F 0%, #F4A460 100%); color: white; padding: 10px 20px; border-radius: 20px; display: inline-block; margin-bottom: 20px; font-weight: 600; }
+        p { font-size: 1.2em; line-height: 1.8; margin-bottom: 20px; color: #6B7280; }
+        .features { text-align: left; margin: 30px auto; max-width: 500px; }
+        .features h3 { color: #2D3748; margin-bottom: 15px; }
+        .features li { margin: 10px 0; padding-left: 25px; position: relative; }
+        .features li:before { content: "✓"; position: absolute; left: 0; color: #6B9080; font-weight: bold; }
+        .btn { display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #E89B6F 0%, #F4A460 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; margin: 10px; transition: transform 0.3s ease; box-shadow: 0 4px 15px rgba(44, 95, 111, 0.3); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(44, 95, 111, 0.4); }
+        .btn-secondary { background: #2C5F6F; box-shadow: 0 4px 15px rgba(44, 95, 111, 0.3); }
+        .btn-secondary:hover { box-shadow: 0 6px 20px rgba(44, 95, 111, 0.4); }
+        @media (max-width: 768px) {
+            .navbar { padding: 10px 15px; }
+            .logo { height: 32px; }
+            .nav-right { gap: 10px; }
+            .search-box { min-width: 50px; padding: 6px 8px; }
+            .search-box svg { width: 16px; height: 16px; margin-right: 4px; }
+            .search-box input { font-size: 0.8em; }
+            h1 { font-size: 2em; }
+            .container { padding: 40px 25px; }
+            .mobile-menu-content { width: 280px; right: -280px; }
+            .hamburger { margin-left: 5px; padding: 3px; }
+            .hamburger span { width: 24px; }
+        }
+        @media (max-width: 400px) {
+            .navbar { padding: 8px 12px; }
+            .logo { height: 28px; }
+            .nav-right { gap: 8px; }
+            .search-box { min-width: 40px; padding: 5px 6px; }
+            .hamburger span { width: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html">
+                <img src="50F4465B-4D0A-459B-AAD8-B367AAEEF636.jpg" alt="ZenCalcs Logo" class="logo">
+            </a>
+
+            <div class="nav-right">
+                <div class="search-box" onclick="openSearchInMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" placeholder="Search Calculator" readonly onclick="openSearchInMenu()">
+                </div>
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Slide-out Menu -->
+    <div class="mobile-menu" id="mobileMenu" onclick="closeMobileMenu()">
+        <div class="mobile-menu-content" onclick="event.stopPropagation()">
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search calculators..." onkeyup="filterCalculators()">
+            </div>
+
+            <!-- Financial Calculators -->
+            <div class="category-header">Financial</div>
+            <a href="mortgage-calculator.html" class="mobile-menu-item">Mortgage Calculator</a>
+            <a href="loan-calculator.html" class="mobile-menu-item">Loan Calculator</a>
+            <a href="auto-loan-calculator.html" class="mobile-menu-item">Auto Loan Calculator</a>
+            <a href="compound-interest.html" class="mobile-menu-item">Savings Calculator</a>
+            <a href="payment-calculator.html" class="mobile-menu-item">Payment Calculator</a>
+            <a href="retirement-calculator.html" class="mobile-menu-item">Retirement Calculator</a>
+            <a href="amortization-calculator.html" class="mobile-menu-item">Amortization Calculator</a>
+            <a href="investment-calculator.html" class="mobile-menu-item">Investment Calculator</a>
+            <a href="inflation-calculator.html" class="mobile-menu-item">Inflation Calculator</a>
+            <a href="roi-calculator.html" class="mobile-menu-item">ROI Calculator</a>
+            <a href="savings-calculator.html" class="mobile-menu-item">Income Tax Calculator</a>
+
+            <div class="category-divider"></div>
+
+            <!-- Fitness & Health -->
+            <div class="category-header">Fitness & Health</div>
+            <a href="bmi-calculator.html" class="mobile-menu-item">BMI Calculator</a>
+            <a href="calorie-calculator.html" class="mobile-menu-item">Calorie Calculator</a>
+            <a href="body-fat-calculator.html" class="mobile-menu-item">Body Fat Calculator</a>
+            <a href="bmr-calculator.html" class="mobile-menu-item">BMR Calculator</a>
+            <a href="ideal-weight-calculator.html" class="mobile-menu-item">Ideal Weight Calculator</a>
+            <a href="pace-calculator.html" class="mobile-menu-item">Pace Calculator</a>
+            <a href="pregnancy-calculator.html" class="mobile-menu-item">Pregnancy Calculator</a>
+            <a href="due-date-calculator.html" class="mobile-menu-item">Due Date Calculator</a>
+            <a href="macro-calculator.html" class="mobile-menu-item">Macro Calculator</a>
+            <a href="body-type-calculator.html" class="mobile-menu-item">Body Type Calculator</a>
+
+            <div class="category-divider"></div>
+
+            <!-- Math Calculators -->
+            <div class="category-header">Math</div>
+            <a href="scientific-calculator.html" class="mobile-menu-item">Scientific Calculator</a>
+            <a href="fraction-calculator.html" class="mobile-menu-item">Fraction Calculator</a>
+            <a href="percentage-calculator.html" class="mobile-menu-item">Percentage Calculator</a>
+            <a href="random-number-generator.html" class="mobile-menu-item">Random Number Generator</a>
+            <a href="triangle-calculator.html" class="mobile-menu-item">Triangle Calculator</a>
+            <a href="standard-deviation-calculator.html" class="mobile-menu-item">Standard Deviation Calculator</a>
+            <a href="square-root-calculator.html" class="mobile-menu-item">Square Root Calculator</a>
+            <a href="exponent-calculator.html" class="mobile-menu-item">Exponent Calculator</a>
+            <a href="log-calculator.html" class="mobile-menu-item">Log Calculator</a>
+            <a href="algebra-calculator.html" class="mobile-menu-item">Algebra Calculator</a>
+
+            <div class="category-divider"></div>
+
+            <!-- Other Calculators -->
+            <div class="category-header">Other</div>
+            <a href="#" class="mobile-menu-item placeholder">Age Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Date Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Time Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Hours Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">GPA Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Grade Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Concrete Calculator</a>
+            <a href="#" class="mobile-menu-item placeholder">Password Generator</a>
+            <a href="#" class="mobile-menu-item placeholder">Conversion Calculator</a>
+            <a href="salary-calculator.html" class="mobile-menu-item">Salary Calculator</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+        <div class="icon">🚀</div>
+        <div class="coming-soon">COMING SOON</div>
+        <h1>Budget Calculator</h1>
+        <p>We're working hard to bring you this powerful calculator with interactive charts, detailed insights, and comprehensive analysis.</p>
+        
+        <div class="features">
+            <h3>What to Expect:</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>Interactive Chart.js visualizations</li>
+                <li>Detailed calculation breakdowns</li>
+                <li>Comprehensive data tables</li>
+                <li>Mobile-optimized interface</li>
+                <li>Professional insights and recommendations</li>
+            </ul>
+        </div>
+        
+        <p><strong>In the meantime, try our other calculators:</strong></p>
+        <a href="index.html" class="btn">View All Calculators</a>
+        <a href="mortgage-calculator.html" class="btn btn-secondary">Try Mortgage Calculator</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+
+        function openSearchInMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.add('active');
+            hamburger.classList.add('active');
+            setTimeout(() => {
+                document.getElementById('searchInput').focus();
+            }, 300);
+        }
+
+        function filterCalculators() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.mobile-menu-item');
+            const headers = document.querySelectorAll('.category-header');
+            const dividers = document.querySelectorAll('.category-divider');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Hide/show category headers based on visible items
+            if (searchTerm) {
+                headers.forEach(header => header.style.display = 'none');
+                dividers.forEach(divider => divider.style.display = 'none');
+            } else {
+                headers.forEach(header => header.style.display = 'block');
+                dividers.forEach(divider => divider.style.display = 'block');
+            }
+        }
+    </script>
+</body>
+</html>

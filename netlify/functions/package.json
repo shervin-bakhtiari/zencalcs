@@ -1,0 +1,9 @@
+{
+  "name": "zencalcs-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for ZenCalcs AI Chat",
+  "main": "ai-chat.js",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1"
+  }
+}

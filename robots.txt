@@ -1,0 +1,13 @@
+# ZenCalcs Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.zencalcs.com/sitemap.xml
+
+# Crawl-delay (optional - adjust if needed)
+# Crawl-delay: 1
+
+# Disallow admin or private areas if any (example)
+# Disallow: /admin/
+# Disallow: /private/

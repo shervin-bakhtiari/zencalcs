@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <title>Percentage Calculator | ZenCalcs</title>
+    <meta name="description" content="Free Percentage Calculator - Calculate percentages, percentage change, and percentage difference easily.">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YMJ87N3YC3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YMJ87N3YC3');
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background: #F8F9FA;min-height:100vh;color: #2D3748}.navbar{background:white;box-shadow:0 2px 10px rgba(0,0,0,0.1);padding:15px 30px;position:sticky;top:0;z-index:1000}.nav-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}.logo{height:40px;width:auto}.nav-right{display:flex;gap:20px;align-items:center}.search-box{display:flex;align-items:center;background:#FFF;border:1px solid #E5E7EB;border-radius:8px;padding:8px 16px;min-width:250px;transition:all .3s ease}.search-box:hover{border-color:#2C5F6F}.search-box:focus-within{border-color:#2C5F6F;box-shadow:0 0 0 3px rgba(44, 95, 111,0.1)}.search-box svg{width:20px;height:20px;color:#6B7280;margin-right:10px}.search-box input{border:none;outline:none;background:transparent;flex:1;color: #2D3748;font-size:.95em}.search-box input::placeholder{color:#D1D5DB}.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:5px}.hamburger span{width:28px;height:3px;background:#2C5F6F;border-radius:3px;transition:all .3s ease}.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(8px,8px)}.hamburger.active span:nth-child(2){opacity:0}.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}.mobile-menu{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.5);z-index:999}.mobile-menu.active{display:block}.mobile-menu-content{position:fixed;top:0;right:-350px;width:320px;height:100vh;background:white;box-shadow:-2px 0 10px rgba(0,0,0,0.1);transition:right .3s ease;padding:80px 20px 20px 20px;overflow-y:auto}.mobile-menu.active .mobile-menu-content{right:0}.search-container{padding:10px 15px 20px}.search-input{width:100%;padding:12px 15px;border:2px solid #E5E7EB;border-radius:8px;font-size:1em}.search-input:focus{outline:none;border-color:#2C5F6F;box-shadow:0 0 0 3px rgba(44, 95, 111,0.1)}.category-header{font-size:.9em;font-weight:700;color:#6B7280;padding:15px 20px 10px;text-transform:uppercase;letter-spacing:1px}.category-divider{height:1px;background:#E5E7EB;margin:10px 0}.mobile-menu-item{padding:14px 20px;margin-bottom:5px;background: #F8F9FA;border-radius:8px;font-size:.95em;font-weight:500;color:#2C5F6F;text-decoration:none;display:block;transition:all .3s ease;border-left:4px solid transparent}.mobile-menu-item:hover{background: #E0F2F1;border-left-color:#2C5F6F;transform:translateX(-5px)}.mobile-menu-item.placeholder{opacity:.5;cursor:not-allowed}.mobile-menu-item.placeholder:hover{transform:none}.container{max-width:1200px;margin:30px auto;padding:0 20px}.calculator-section{background:white;border-radius:15px;padding:40px;box-shadow:0 2px 10px rgba(0,0,0,0.08);margin-bottom:30px}.calculator-section h1{color: #2D3748;margin-bottom:10px;font-size:2.2em;text-align:center}.calc-subtitle{text-align:center;color:#6B7280;margin-bottom:30px;font-size:1.1em}.description{background: #E0F2F1;padding:25px;border-radius:12px;margin-bottom:30px;border-left:5px solid #2C5F6F}.description p{color:#4B5563;line-height:1.8;font-size:1.05em}.calc-mode-tabs{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap}.calc-mode-tab{flex:1;min-width:150px;padding:15px;background: #F8F9FA;border:2px solid #E5E7EB;border-radius:8px;text-align:center;cursor:pointer;transition:all .3s ease;font-weight:600}.calc-mode-tab:hover{border-color:#2C5F6F;background: #E0F2F1}.calc-mode-tab.active{background:#2C5F6F;color:white;border-color:#2C5F6F}.input-group{margin-bottom:20px}.input-group label{display:block;font-weight:600;margin-bottom:8px;color:#4B5563;font-size:1em}.input-group input{width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:8px;font-size:1em;transition:all .3s ease}.input-group input:focus{outline:none;border-color:#2C5F6F;box-shadow:0 0 0 3px rgba(44, 95, 111,0.1)}.input-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}.calculate-btn{width:100%;padding:18px;background: linear-gradient(135deg, #E89B6F 0%, #F4A460 100%);color:white;border:none;border-radius:10px;font-size:1.2em;font-weight:700;cursor:pointer;transition:all .3s ease;margin-top:25px;box-shadow: 0 4px 15px rgba(232, 155, 111, 0.4)}.calculate-btn:hover{transform:translateY(-3px);box-shadow: 0 6px 20px rgba(232, 155, 111, 0.5)}.result-section{margin-top:40px;display:none}.key-insight{background: linear-gradient(135deg, #E89B6F 0%, #F4A460 100%);color:white;padding:30px;border-radius:12px;margin-bottom:30px;box-shadow:0 4px 20px rgba(44, 95, 111,0.3)}.key-insight h3{font-size:1.5em;margin-bottom:15px}.key-insight p{font-size:1.1em;line-height:1.8;opacity:.95}.chart-container{background:white;padding:30px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin-bottom:30px;position:relative;height:300px}@media (max-width:768px){.navbar{padding:10px 15px}.logo{height:32px}.nav-right{gap:10px}.search-box{min-width:50px;padding:6px 8px}.search-box svg{width:16px;height:16px;margin-right:4px}.search-box input{font-size:.8em}.calculator-section{padding:25px}.chart-container{height:250px;padding:20px}.input-row{grid-template-columns:1fr}.mobile-menu-content{width:280px;right:-280px}.hamburger{margin-left:5px;padding:3px}.hamburger span{width:24px}.calc-mode-tabs{flex-direction:column}.calc-mode-tab{min-width:100%}}@media (max-width:400px){.navbar{padding:8px 12px}.logo{height:28px}.nav-right{gap:8px}.search-box{min-width:40px;padding:5px 6px}.hamburger span{width:22px}}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html"><img src="50F4465B-4D0A-459B-AAD8-B367AAEEF636.jpg" alt="ZenCalcs Logo" class="logo"></a>
+            <div class="nav-right">
+                <div class="search-box" onclick="openSearchInMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" placeholder="Search Calculator" readonly onclick="openSearchInMenu()">
+                </div>
+                <div class="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu" onclick="closeMobileMenu()">
+        <div class="mobile-menu-content" onclick="event.stopPropagation()">
+            <div class="search-container"><input type="text" id="searchInput" class="search-input" placeholder="Search calculators..." onkeyup="filterCalculators()"></div>
+            <div class="category-header">Financial</div>
+            <a href="mortgage-calculator.html" class="mobile-menu-item">Mortgage Calculator</a>
+            <a href="loan-calculator.html" class="mobile-menu-item">Loan Calculator</a>
+            <a href="auto-loan-calculator.html" class="mobile-menu-item">Auto Loan Calculator</a>
+            <a href="compound-interest.html" class="mobile-menu-item">Savings Calculator</a>
+            <a href="payment-calculator.html" class="mobile-menu-item">Payment Calculator</a>
+            <a href="retirement-calculator.html" class="mobile-menu-item">Retirement Calculator</a>
+            <a href="amortization-calculator.html" class="mobile-menu-item">Amortization Calculator</a>
+            <a href="investment-calculator.html" class="mobile-menu-item">Investment Calculator</a>
+            <a href="inflation-calculator.html" class="mobile-menu-item">Inflation Calculator</a>
+            <a href="roi-calculator.html" class="mobile-menu-item">ROI Calculator</a>
+            <div class="category-divider"></div>
+            <div class="category-header">Fitness & Health</div>
+            <a href="bmi-calculator.html" class="mobile-menu-item">BMI Calculator</a>
+            <a href="calorie-calculator.html" class="mobile-menu-item">Calorie Calculator</a>
+            <a href="body-fat-calculator.html" class="mobile-menu-item">Body Fat Calculator</a>
+            <a href="bmr-calculator.html" class="mobile-menu-item">BMR Calculator</a>
+            <a href="ideal-weight-calculator.html" class="mobile-menu-item">Ideal Weight Calculator</a>
+            <a href="pace-calculator.html" class="mobile-menu-item">Pace Calculator</a>
+            <a href="pregnancy-calculator.html" class="mobile-menu-item">Pregnancy Calculator</a>
+            <a href="due-date-calculator.html" class="mobile-menu-item">Due Date Calculator</a>
+            <a href="macro-calculator.html" class="mobile-menu-item">Macro Calculator</a>
+            <a href="body-type-calculator.html" class="mobile-menu-item">Body Type Calculator</a>
+            <div class="category-divider"></div>
+            <div class="category-header">Math</div>
+            <a href="scientific-calculator.html" class="mobile-menu-item">Scientific Calculator</a>
+            <a href="fraction-calculator.html" class="mobile-menu-item">Fraction Calculator</a>
+            <a href="percentage-calculator.html" class="mobile-menu-item">Percentage Calculator</a>
+            <a href="random-number-generator.html" class="mobile-menu-item">Random Number Generator</a>
+            <a href="triangle-calculator.html" class="mobile-menu-item">Triangle Calculator</a>
+            <a href="standard-deviation-calculator.html" class="mobile-menu-item">Standard Deviation Calculator</a>
+            <a href="square-root-calculator.html" class="mobile-menu-item">Square Root Calculator</a>
+            <a href="exponent-calculator.html" class="mobile-menu-item">Exponent Calculator</a>
+            <a href="log-calculator.html" class="mobile-menu-item">Log Calculator</a>
+            <a href="algebra-calculator.html" class="mobile-menu-item">Algebra Calculator</a>
+            <div class="category-divider"></div>
+            <div class="category-header">Other</div>
+            <a href="salary-calculator.html" class="mobile-menu-item">Salary Calculator</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="calculator-section">
+            <h1>Percentage Calculator</h1>
+            <p class="calc-subtitle">Calculate percentages, percentage change, and percentage difference</p>
+            <div class="description">
+                <p>Use this versatile percentage calculator to solve common percentage problems. Calculate what percent one number is of another, find percentage increases or decreases, and more.</p>
+            </div>
+            <div class="calc-mode-tabs">
+                <div class="calc-mode-tab active" onclick="switchMode('basic')">Basic Percentage</div>
+                <div class="calc-mode-tab" onclick="switchMode('change')">Percentage Change</div>
+                <div class="calc-mode-tab" onclick="switchMode('difference')">Percentage Difference</div>
+            </div>
+            <div id="basicMode">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>What is</label>
+                        <input type="number" id="percent1" placeholder="15" step="any">
+                    </div>
+                    <div class="input-group">
+                        <label>% of</label>
+                        <input type="number" id="of1" placeholder="200" step="any">
+                    </div>
+                </div>
+                <button class="calculate-btn" onclick="calculateBasic()">Calculate</button>
+            </div>
+            <div id="changeMode" style="display:none">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Original Value</label>
+                        <input type="number" id="original" placeholder="100" step="any">
+                    </div>
+                    <div class="input-group">
+                        <label>New Value</label>
+                        <input type="number" id="new" placeholder="120" step="any">
+                    </div>
+                </div>
+                <button class="calculate-btn" onclick="calculateChange()">Calculate Change</button>
+            </div>
+            <div id="differenceMode" style="display:none">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Value 1</label>
+                        <input type="number" id="val1" placeholder="50" step="any">
+                    </div>
+                    <div class="input-group">
+                        <label>Value 2</label>
+                        <input type="number" id="val2" placeholder="60" step="any">
+                    </div>
+                </div>
+                <button class="calculate-btn" onclick="calculateDifference()">Calculate Difference</button>
+            </div>
+            <div class="result-section" id="result"></div>
+        </div>
+    </div>
+    <script>
+        let chartInstance=null;function toggleMobileMenu(){const e=document.getElementById("mobileMenu"),t=document.querySelector(".hamburger");e.classList.toggle("active"),t.classList.toggle("active")}function closeMobileMenu(){const e=document.getElementById("mobileMenu"),t=document.querySelector(".hamburger");e.classList.remove("active"),t.classList.remove("active")}function openSearchInMenu(){const e=document.getElementById("mobileMenu"),t=document.querySelector(".hamburger");e.classList.add("active"),t.classList.add("active"),setTimeout(()=>document.getElementById("searchInput").focus(),300)}function filterCalculators(){const e=document.getElementById("searchInput").value.toLowerCase(),t=document.querySelectorAll(".mobile-menu-item"),a=document.querySelectorAll(".category-header"),n=document.querySelectorAll(".category-divider");t.forEach(t=>{t.style.display=t.textContent.toLowerCase().includes(e)?"block":"none"}),e?(a.forEach(e=>e.style.display="none"),n.forEach(e=>e.style.display="none")):(a.forEach(e=>e.style.display="block"),n.forEach(e=>e.style.display="block"))}function switchMode(e){document.querySelectorAll(".calc-mode-tab").forEach(e=>e.classList.remove("active")),event.target.classList.add("active"),document.getElementById("basicMode").style.display="basic"===e?"block":"none",document.getElementById("changeMode").style.display="change"===e?"block":"none",document.getElementById("differenceMode").style.display="difference"===e?"block":"none",document.getElementById("result").style.display="none"}function calculateBasic(){const e=parseFloat(document.getElementById("percent1").value),t=parseFloat(document.getElementById("of1").value);if(isNaN(e)||isNaN(t))return void alert("Please enter valid numbers");const a=e/100*t,n=`
+            <div class="key-insight">
+                <h3>${e}% of ${t} = ${a.toFixed(2)}</h3>
+                <p><strong>Calculation:</strong> ${e}% × ${t} = ${a.toFixed(2)}</p>
+                <p><strong>As Decimal:</strong> ${(e/100).toFixed(4)} × ${t} = ${a.toFixed(2)}</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="percentChart"></canvas>
+            </div>
+        `;showResult(n),chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("percentChart").getContext("2d"),{type:"doughnut",data:{labels:[`${e}% (${a.toFixed(2)})`,`${(100-e).toFixed(1)}% (${(t-a).toFixed(2)})`],datasets:[{data:[a,t-a],backgroundColor:["#2C5F6F","#E5E7EB"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"bottom"},title:{display:!0,text:`${e}% of ${t}`,font:{size:16,weight:"bold"}}}}})}function calculateChange(){const e=parseFloat(document.getElementById("original").value),t=parseFloat(document.getElementById("new").value);if(isNaN(e)||isNaN(t))return void alert("Please enter valid numbers");const a=(t-e)/e*100,n=t>e?"increase":"decrease",c=`
+            <div class="key-insight">
+                <h3>Percentage ${n.charAt(0).toUpperCase()+n.slice(1)}: ${Math.abs(a).toFixed(2)}%</h3>
+                <p><strong>From:</strong> ${e} → <strong>To:</strong> ${t}</p>
+                <p><strong>Change:</strong> ${(t-e).toFixed(2)} (${a>=0?"+":""}${a.toFixed(2)}%)</p>
+                <p><strong>Formula:</strong> ((${t} - ${e}) / ${e}) × 100 = ${a.toFixed(2)}%</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="percentChart"></canvas>
+            </div>
+        `;showResult(c),chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("percentChart").getContext("2d"),{type:"bar",data:{labels:["Original Value","New Value"],datasets:[{label:"Value",data:[e,t],backgroundColor:["#5FA8D3","#2C5F6F"],borderWidth:0}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},title:{display:!0,text:`${Math.abs(a).toFixed(2)}% ${n}`,font:{size:16,weight:"bold"}}},scales:{y:{beginAtZero:!0}}}})}function calculateDifference(){const e=parseFloat(document.getElementById("val1").value),t=parseFloat(document.getElementById("val2").value);if(isNaN(e)||isNaN(t))return void alert("Please enter valid numbers");const a=Math.abs(e-t)/(e+t)*2*100,n=`
+            <div class="key-insight">
+                <h3>Percentage Difference: ${a.toFixed(2)}%</h3>
+                <p><strong>Value 1:</strong> ${e}</p>
+                <p><strong>Value 2:</strong> ${t}</p>
+                <p><strong>Absolute Difference:</strong> ${Math.abs(e-t).toFixed(2)}</p>
+                <p><strong>Formula:</strong> |${e} - ${t}| / ((${e} + ${t}) / 2) × 100 = ${a.toFixed(2)}%</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="percentChart"></canvas>
+            </div>
+        `;showResult(n),chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("percentChart").getContext("2d"),{type:"bar",data:{labels:["Value 1","Value 2"],datasets:[{label:"Values",data:[e,t],backgroundColor:["#2C5F6F","#6B9080"],borderWidth:0}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},title:{display:!0,text:`${a.toFixed(2)}% difference`,font:{size:16,weight:"bold"}}},scales:{y:{beginAtZero:!0}}}})}function showResult(e){const t=document.getElementById("result");t.innerHTML=e,t.style.display="block",window.scrollTo&&window.scrollTo({top:t.offsetTop-100,behavior:"smooth"})}
+    </script>
+</body>
+</html>
