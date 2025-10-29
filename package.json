@@ -1,0 +1,23 @@
+{
+  "name": "live",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shervin-bakhtiari/zencalcs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shervin-bakhtiari/zencalcs/issues"
+  },
+  "homepage": "https://github.com/shervin-bakhtiari/zencalcs#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.68.0"
+  }
+}
