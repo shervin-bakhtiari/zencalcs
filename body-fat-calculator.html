@@ -198,5 +198,8 @@
                 </div>
             `,y=document.getElementById("result");if(y.innerHTML=g,y.style.display="block",chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("bodyFatChart").getContext("2d"),{type:"doughnut",data:{labels:["Fat Mass","Lean Mass"],datasets:[{data:[s.toFixed(1),d.toFixed(1)],backgroundColor:["#F4A460","#6B9080"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"bottom"},title:{display:!0,text:"Body Composition",font:{size:16,weight:"bold"}}}}}),window.scrollTo)window.scrollTo({top:document.getElementById("result").offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>

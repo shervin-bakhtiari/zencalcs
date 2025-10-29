@@ -204,5 +204,8 @@
             </div>
         `;showResult(d),chartInstance&&chartInstance.destroy();const u=[],m=[];let p=c-10,b=c+10;for(let t=p;t<=b;t+=.2){u.push(t.toFixed(2)),m.push(e*t*t+t*t+a)}const y=[{label:`y = ${e}x² ${t>=0?"+":""}${t}x ${a>=0?"+":""}${a}`,data:m,borderColor:"#2C5F6F",backgroundColor:"rgba(44, 95, 111, 0.1)",borderWidth:3,pointRadius:0,tension:.4},{label:`Vertex (${c.toFixed(2)}, ${i.toFixed(2)})`,data:u.map(e=>parseFloat(e)===parseFloat(c.toFixed(2))?i:null),borderColor:"#E89B6F",backgroundColor:"#E89B6F",pointRadius:8,pointHoverRadius:10,showLine:!1}];n>=0&&(y.push({label:`Root 1: x = ${o.toFixed(3)}`,data:u.map(e=>Math.abs(parseFloat(e)-o)<.1?0:null),borderColor:"#6B9080",backgroundColor:"#6B9080",pointRadius:8,pointHoverRadius:10,showLine:!1}),y.push({label:`Root 2: x = ${l.toFixed(3)}`,data:u.map(e=>Math.abs(parseFloat(e)-l)<.1?0:null),borderColor:"#A8DADC",backgroundColor:"#A8DADC",pointRadius:8,pointHoverRadius:10,showLine:!1})),chartInstance=new Chart(document.getElementById("algebraChart").getContext("2d"),{type:"line",data:{labels:u,datasets:y},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"top"},title:{display:!0,text:`Parabola: y = ${e}x² ${t>=0?"+":""}${t}x ${a>=0?"+":""}${a}`,font:{size:16,weight:"bold"}}},scales:{x:{title:{display:!0,text:"x"}},y:{title:{display:!0,text:"y"}}}}})}function showResult(e){const t=document.getElementById("result");t.innerHTML=e,t.style.display="block",window.scrollTo&&window.scrollTo({top:t.offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>

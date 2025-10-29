@@ -75,9 +75,9 @@
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         
         /* Hero Section */
-        .hero-section { background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); border-radius: 20px; padding: 80px 40px; margin-bottom: 50px; box-shadow: 0 10px 40px rgba(44, 95, 111, 0.2); text-align: center; color: white; }
-        .hero-section h1 { font-size: 3.5em; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 800; }
-        .hero-section .tagline { font-size: 1.5em; margin-bottom: 30px; opacity: 0.95; font-weight: 300; }
+        .hero-section { background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); border-radius: 20px; padding: 40px 40px; margin-bottom: 50px; box-shadow: 0 10px 40px rgba(44, 95, 111, 0.2); text-align: center; color: white; }
+        .hero-section h1 { font-size: 3em; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 800; }
+        .hero-section .tagline { font-size: 1.3em; margin-bottom: 0; opacity: 0.95; font-weight: 300; }
 
         /* Calculator Grid */
         .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 50px; }
@@ -90,14 +90,53 @@
         .calc-card li { padding: 8px 0; color: #4B5563; font-size: 0.95em; padding-left: 25px; position: relative; }
         .calc-card li:before { content: "✓"; position: absolute; left: 0; color: #6B9080; font-weight: bold; }
         
+        /* AI Chat Section on Landing Page */
+        .ai-chat-section { background: #FFFFFF; border-radius: 20px; padding: 50px 40px; margin-bottom: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #E5E7EB; }
+        .ai-chat-section h2 { text-align: center; color: #2D3748; font-size: 2.5em; margin-bottom: 15px; font-weight: 700; }
+        .ai-chat-section .subtitle { text-align: center; color: #6B7280; font-size: 1.1em; margin-bottom: 40px; }
+        .ai-chat-container { max-width: 900px; margin: 0 auto; }
+        .ai-chat-input-area { display: flex; gap: 15px; margin-bottom: 30px; }
+        .ai-chat-input-area textarea { flex: 1; padding: 18px 20px; border: 2px solid #E5E7EB; border-radius: 12px; font-size: 1em; font-family: 'Inter', sans-serif; resize: none; min-height: 60px; transition: all 0.3s; }
+        .ai-chat-input-area textarea:focus { outline: none; border-color: #2C5F6F; box-shadow: 0 0 0 3px rgba(44, 95, 111, 0.1); }
+        .ai-chat-input-area button { padding: 18px 35px; background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); color: white; border: none; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .ai-chat-input-area button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(44, 95, 111, 0.3); }
+        .ai-chat-response-area { background: #F8F9FA; border-radius: 15px; padding: 30px; min-height: 300px; margin-bottom: 20px; }
+        .ai-message { background: #FFFFFF; padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #2C5F6F; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .ai-message-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .ai-message-header svg { width: 24px; height: 24px; color: #2C5F6F; }
+        .ai-message-header h4 { margin: 0; color: #2D3748; font-size: 1.1em; }
+        .ai-message-content { color: #4B5563; line-height: 1.8; font-size: 1.05em; }
+        .ai-message-content strong { color: #2C5F6F; font-weight: 600; }
+        .ai-action-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
+        .ai-action-btn { padding: 12px 20px; background: #FFFFFF; border: 2px solid #2C5F6F; color: #2C5F6F; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.95em; display: flex; align-items: center; gap: 8px; }
+        .ai-action-btn:hover { background: #2C5F6F; color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.2); }
+        .ai-empty-state { text-align: center; padding: 60px 20px; color: #9CA3AF; }
+        .ai-empty-state svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3; }
+        .ai-empty-state h3 { color: #6B7280; font-size: 1.3em; margin-bottom: 10px; }
+        .ai-empty-state p { font-size: 1em; }
+
         /* Features Section */
         .features-section { background: #FFFFFF; border-radius: 20px; padding: 60px 40px; margin-bottom: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #E5E7EB; }
-        .features-section h2 { text-align: center; color: #2D3748; font-size: 2.5em; margin-bottom: 50px; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-        .feature-item { text-align: center; }
-        .feature-item-icon { font-size: 3em; margin-bottom: 20px; color: #2C5F6F; }
-        .feature-item h3 { color: #2D3748; font-size: 1.4em; margin-bottom: 15px; }
-        .feature-item p { color: #6B7280; line-height: 1.6; }
+        .features-section h2 { text-align: center; color: #2D3748; font-size: 2.5em; margin-bottom: 50px; font-weight: 700; }
+
+        /* Hero Feature Card - AI Powered */
+        .hero-feature-container { margin-bottom: 60px; }
+        .hero-feature { background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); padding: 50px 40px; border-radius: 20px; color: white; box-shadow: 0 10px 40px rgba(44, 95, 111, 0.3); text-align: center; transition: all 0.3s ease; grid-column: 1 / -1; }
+        .hero-feature:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(44, 95, 111, 0.4); }
+        .hero-feature-icon { font-size: 4.5em; margin-bottom: 25px; color: white; display: flex; justify-content: center; }
+        .hero-feature-icon svg { width: 80px; height: 80px; }
+        .hero-feature h3 { color: white; font-size: 2.2em; margin-bottom: 20px; font-weight: 700; }
+        .hero-feature p { color: rgba(255, 255, 255, 0.95); font-size: 1.15em; line-height: 1.8; max-width: 700px; margin: 0 auto; }
+
+        /* Feature Grid - Unified Container */
+        .features-wrapper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .features-grid { display: contents; }
+        .feature-item { text-align: center; background: #FFFFFF; border: 2px solid #E5E7EB; border-radius: 15px; padding: 40px 30px; transition: all 0.3s ease; height: 100%; }
+        .feature-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(44, 95, 111, 0.15); border-color: #2C5F6F; }
+        .feature-item-icon { font-size: 3em; margin-bottom: 20px; color: #2C5F6F; display: flex; justify-content: center; }
+        .feature-item-icon svg { width: 56px; height: 56px; }
+        .feature-item h3 { color: #2D3748; font-size: 1.4em; margin-bottom: 15px; font-weight: 600; }
+        .feature-item p { color: #6B7280; line-height: 1.7; font-size: 1em; }
 
         /* Footer */
         .footer { background: #FFFFFF; border-radius: 15px; padding: 40px; margin-top: 50px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border: 1px solid #E5E7EB; }
@@ -105,6 +144,11 @@
         .footer a { color: #2C5F6F; text-decoration: none; font-weight: 600; }
         .footer a:hover { color: #1F4A56; text-decoration: underline; }
         
+        /* Tablet Responsive */
+        @media (max-width: 1024px) {
+            .features-wrapper { grid-template-columns: repeat(2, 1fr); }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .navbar { padding: 10px 15px; }
@@ -113,14 +157,28 @@
             .search-box { min-width: 50px; padding: 6px 8px; }
             .search-box svg { width: 16px; height: 16px; margin-right: 4px; }
             .search-box input { font-size: 0.8em; }
-            .hero-section { padding: 50px 25px; }
-            .hero-section h1 { font-size: 2.2em; }
-            .hero-section .tagline { font-size: 1.2em; }
+            .hero-section { padding: 25px 20px; }
+            .hero-section h1 { font-size: 2em; }
+            .hero-section .tagline { font-size: 1.1em; }
             .calc-grid { grid-template-columns: 1fr; }
-            .features-grid { grid-template-columns: 1fr; }
+            .features-wrapper { grid-template-columns: 1fr; }
+            .features-section { padding: 40px 25px; }
+            .features-section h2 { font-size: 2em; }
+            .hero-feature-container { margin-bottom: 40px; }
+            .hero-feature { padding: 40px 25px; }
+            .hero-feature-icon svg { width: 60px; height: 60px; }
+            .hero-feature h3 { font-size: 1.8em; }
+            .hero-feature p { font-size: 1em; }
+            .feature-item { padding: 30px 20px; }
             .mobile-menu-content { width: 280px; right: -280px; }
             .hamburger { margin-left: 5px; padding: 3px; }
             .hamburger span { width: 24px; }
+            .ai-chat-section { padding: 30px 20px; }
+            .ai-chat-section h2 { font-size: 1.8em; }
+            .ai-chat-input-area { flex-direction: column; }
+            .ai-chat-input-area button { width: 100%; }
+            .ai-action-buttons { flex-direction: column; }
+            .ai-action-btn { justify-content: center; }
         }
         @media (max-width: 400px) {
             .navbar { padding: 8px 12px; }
@@ -128,6 +186,14 @@
             .nav-right { gap: 8px; }
             .search-box { min-width: 40px; padding: 5px 6px; }
             .hamburger span { width: 22px; }
+            .hero-section { padding: 20px 15px; }
+            .hero-section h1 { font-size: 1.6em; }
+            .hero-section .tagline { font-size: 1em; }
+            .ai-chat-section { padding: 25px 15px; }
+            .features-section { padding: 30px 15px; }
+            .features-section h2 { font-size: 1.6em; }
+            .hero-feature { padding: 30px 20px; }
+            .hero-feature h3 { font-size: 1.5em; }
         }
     </style>
 </head>
@@ -161,6 +227,11 @@
             <div class="search-container">
                 <input type="text" id="searchInput" class="search-input" placeholder="Search calculators..." onkeyup="filterCalculators()">
             </div>
+
+            <!-- AI Calculator -->
+            <a href="index.html" class="mobile-menu-item" style="background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); color: white; font-weight: 700; border-left-color: #1E40AF; box-shadow: 0 4px 12px rgba(44, 95, 111, 0.3); margin-bottom: 15px;">⚡ AI Calculator Assistant</a>
+
+            <div class="category-divider"></div>
 
             <!-- Financial Calculators -->
             <div class="category-header">Financial</div>
@@ -206,20 +277,6 @@
             <a href="log-calculator.html" class="mobile-menu-item">Log Calculator</a>
             <a href="algebra-calculator.html" class="mobile-menu-item">Algebra Calculator</a>
 
-            <div class="category-divider"></div>
-
-            <!-- Other Calculators -->
-            <div class="category-header">Other</div>
-            <a href="#" class="mobile-menu-item placeholder">Age Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Date Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Time Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Hours Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">GPA Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Grade Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Concrete Calculator</a>
-            <a href="#" class="mobile-menu-item placeholder">Password Generator</a>
-            <a href="#" class="mobile-menu-item placeholder">Conversion Calculator</a>
-            <a href="salary-calculator.html" class="mobile-menu-item">Salary Calculator</a>
         </div>
     </div>
 
@@ -229,224 +286,105 @@
             <p class="tagline">All your essential calculators, beautifully organized</p>
         </div>
 
-        <div class="calc-grid">
-            <a href="mortgage-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                </div>
-                <h3>Mortgage Calculator</h3>
-                <p>Calculate monthly payments with complete amortization schedules and interest breakdowns.</p>
-                <ul>
-                    <li>Monthly payment calculations</li>
-                    <li>Full amortization schedule</li>
-                    <li>Principal vs interest charts</li>
-                    <li>Total cost analysis</li>
-                </ul>
-            </a>
+        <!-- AI Chat Interface -->
+        <div class="ai-chat-section">
+            <h2>AI Calculator Assistant</h2>
+            <p class="subtitle">Ask any calculation question - financial, health, math, or conversions</p>
 
-            <a href="loan-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
+            <div class="ai-chat-container">
+                <div class="ai-chat-input-area">
+                    <textarea
+                        id="aiQuestion"
+                        placeholder="What would you like me to calculate?"
+                        rows="2"
+                    ></textarea>
+                    <button onclick="askAI()">Ask AI</button>
                 </div>
-                <h3>Loan Calculator</h3>
-                <p>Calculate payments for any type of loan with detailed payment schedules.</p>
-                <ul>
-                    <li>Personal, auto, student loans</li>
-                    <li>Payment breakdown charts</li>
-                    <li>Early payoff scenarios</li>
-                    <li>Interest savings analysis</li>
-                </ul>
-            </a>
 
-            <a href="compound-interest.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
+                <div class="ai-chat-response-area" id="responseArea">
+                    <div class="ai-empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <h3>Ready to Help</h3>
+                        <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
+                    </div>
                 </div>
-                <h3>Compound Interest</h3>
-                <p>Watch your investments grow with flexible contribution options and growth projections.</p>
-                <ul>
-                    <li>Multiple contribution frequencies</li>
-                    <li>Year-by-year growth</li>
-                    <li>Interactive growth charts</li>
-                    <li>ROI calculations</li>
-                </ul>
-            </a>
-
-            <a href="retirement-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <h3>Retirement Calculator</h3>
-                <p>Plan your retirement with comprehensive projections and savings goals.</p>
-                <ul>
-                    <li>Retirement savings needs</li>
-                    <li>Age-based projections</li>
-                    <li>Income replacement analysis</li>
-                    <li>Social Security integration</li>
-                </ul>
-            </a>
-
-            <a href="salary-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <h3>Salary Calculator</h3>
-                <p>Convert between hourly, daily, weekly, monthly, and annual salary instantly.</p>
-                <ul>
-                    <li>All time period conversions</li>
-                    <li>Customizable work hours</li>
-                    <li>Visual comparisons</li>
-                    <li>Real-time calculations</li>
-                </ul>
-            </a>
-
-            <a href="budget-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                </div>
-                <h3>Budget Calculator</h3>
-                <p>Track income and expenses with category breakdowns and budget recommendations.</p>
-                <ul>
-                    <li>Income vs expenses tracking</li>
-                    <li>Category-based budgeting</li>
-                    <li>50/30/20 rule guidance</li>
-                    <li>Savings goals</li>
-                </ul>
-            </a>
-
-            <a href="investment-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                    </svg>
-                </div>
-                <h3>Investment Calculator</h3>
-                <p>Calculate returns on your investments with different scenarios and timeframes.</p>
-                <ul>
-                    <li>Stock, bonds, mutual funds</li>
-                    <li>Return projections</li>
-                    <li>Risk analysis</li>
-                    <li>Portfolio growth tracking</li>
-                </ul>
-            </a>
-
-            <a href="savings-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                    </svg>
-                </div>
-                <h3>Savings Calculator</h3>
-                <p>Plan your savings goals with interest calculations and contribution schedules.</p>
-                <ul>
-                    <li>Goal-based savings</li>
-                    <li>Interest earnings</li>
-                    <li>Timeline planning</li>
-                    <li>Emergency fund guidance</li>
-                </ul>
-            </a>
-
-            <a href="debt-payoff.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <h3>Debt Payoff Calculator</h3>
-                <p>Create a debt elimination plan with snowball and avalanche methods.</p>
-                <ul>
-                    <li>Multiple debt tracking</li>
-                    <li>Payoff strategies</li>
-                    <li>Interest savings</li>
-                    <li>Debt-free timeline</li>
-                </ul>
-            </a>
-
-            <a href="roi-calculator.html" class="calc-card">
-                <div class="calc-card-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="56" height="56">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <h3>ROI Calculator</h3>
-                <p>Calculate return on investment for business and personal investments.</p>
-                <ul>
-                    <li>Percentage returns</li>
-                    <li>Profit/loss analysis</li>
-                    <li>Time-based ROI</li>
-                    <li>Comparison metrics</li>
-                </ul>
-            </a>
+            </div>
         </div>
 
         <div class="features-section">
             <h2>Why Choose ZenCalcs?</h2>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <h3>Interactive Charts</h3>
-                    <p>Beautiful Chart.js visualizations that make your data easy to understand.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
+
+            <!-- Unified Grid Container for Perfect Alignment -->
+            <div class="features-wrapper">
+                <!-- Hero Feature - AI Powered (spans full width) -->
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
                     </div>
-                    <h3>Smart Insights</h3>
-                    <p>Get personalized recommendations with every calculation.</p>
+                    <h3>AI-Powered Intelligence</h3>
+                    <p>Ask questions naturally and get instant, accurate calculations with detailed explanations. Our Claude-powered AI understands context and provides personalized insights for all your calculation needs.</p>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
+
+                <!-- Supporting Features Grid (6 cards in 3x2) -->
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <h3>Interactive Charts</h3>
+                        <p>Beautiful visualizations that make your data easy to understand.</p>
                     </div>
-                    <h3>Detailed Analysis</h3>
-                    <p>Comprehensive tables and breakdowns for complete understanding.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3>Fast & Free</h3>
+                        <p>No signup required. Completely free forever.</p>
                     </div>
-                    <h3>Fast & Free</h3>
-                    <p>No signup required. Completely free forever.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3>Mobile Friendly</h3>
+                        <p>Perfect experience on any device.</p>
                     </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Perfect experience on any device.</p>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="48" height="48">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                        </svg>
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <h3>Detailed Analysis</h3>
+                        <p>Comprehensive tables and breakdowns for complete understanding.</p>
                     </div>
-                    <h3>Professional Quality</h3>
-                    <p>Enterprise-grade calculators for personal use.</p>
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        </div>
+                        <h3>Professional Quality</h3>
+                        <p>Enterprise-grade calculators for personal use.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h3>Smart Insights</h3>
+                        <p>Get personalized recommendations with every calculation.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -592,8 +530,186 @@
         }
     </script>
 
-    <!-- AI Chat Assistant -->
-    <link rel="stylesheet" href="css/ai-chat.css">
-    <script src="js/ai-chat.js"></script>
+    <!-- AI Chat JavaScript -->
+    <script>
+        let conversationHistory = [];
+
+        async function askAI() {
+            const questionInput = document.getElementById('aiQuestion');
+            const responseArea = document.getElementById('responseArea');
+            const question = questionInput.value.trim();
+
+            if (!question) return;
+
+            // Clear input
+            questionInput.value = '';
+
+            // Show loading state
+            responseArea.innerHTML = `
+                <div class="ai-message">
+                    <div class="ai-message-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <h4>Analyzing your question...</h4>
+                    </div>
+                    <div class="ai-message-content" style="opacity: 0.6;">
+                        Processing your calculation request...
+                    </div>
+                </div>
+            `;
+
+            try {
+                // Call AI API
+                const response = await fetch('/.netlify/functions/ai-chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: question,
+                        conversationHistory: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get response');
+                }
+
+                const data = await response.json();
+
+                // Update conversation history
+                conversationHistory.push(
+                    { role: 'user', content: question },
+                    { role: 'assistant', content: data.response }
+                );
+
+                // Display response with action buttons
+                displayResponse(question, data.response);
+
+            } catch (error) {
+                console.error('Error:', error);
+                responseArea.innerHTML = `
+                    <div class="ai-message">
+                        <div class="ai-message-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <h4>Error</h4>
+                        </div>
+                        <div class="ai-message-content">
+                            Sorry, I encountered an error. Please try again later.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function displayResponse(question, answer) {
+            const responseArea = document.getElementById('responseArea');
+
+            responseArea.innerHTML = `
+                <div class="ai-message">
+                    <div class="ai-message-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <h4>Your Question</h4>
+                    </div>
+                    <div class="ai-message-content">
+                        ${escapeHtml(question)}
+                    </div>
+                </div>
+
+                <div class="ai-message">
+                    <div class="ai-message-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <h4>AI Response</h4>
+                    </div>
+                    <div class="ai-message-content">
+                        ${formatAnswer(answer)}
+                    </div>
+                    <div class="ai-action-buttons">
+                        <button class="ai-action-btn" onclick="askFollowUp()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            Ask Follow-Up Question
+                        </button>
+                        <button class="ai-action-btn" onclick="requestTable()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Show as Table
+                        </button>
+                        <button class="ai-action-btn" onclick="requestGraph()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            Visualize with Graph
+                        </button>
+                        <button class="ai-action-btn" onclick="clearChat()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Start New Calculation
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatAnswer(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function askFollowUp() {
+            document.getElementById('aiQuestion').focus();
+        }
+
+        function requestTable() {
+            document.getElementById('aiQuestion').value = 'Can you show this as a detailed table?';
+            askAI();
+        }
+
+        function requestGraph() {
+            document.getElementById('aiQuestion').value = 'Can you create a visual graph or chart for this data?';
+            askAI();
+        }
+
+        function clearChat() {
+            conversationHistory = [];
+            document.getElementById('responseArea').innerHTML = `
+                <div class="ai-empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <h3>Ready to Help</h3>
+                    <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
+                </div>
+            `;
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('aiQuestion');
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    askAI();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

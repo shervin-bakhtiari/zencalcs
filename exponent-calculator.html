@@ -134,5 +134,8 @@
             </div>
         `;showResult(s),chartInstance&&chartInstance.destroy();const r=[],l=[];let c=Math.max(-5,t-5),i=Math.min(10,t+5);for(let a=c;a<=i;a+=.5){r.push(a);const t=Math.pow(e,a);l.push(isFinite(t)?t:null)}chartInstance=new Chart(document.getElementById("expChart").getContext("2d"),{type:"line",data:{labels:r,datasets:[{label:`f(x) = ${e}^x`,data:l,borderColor:"#2C5F6F",backgroundColor:"rgba(44, 95, 111, 0.1)",borderWidth:2,pointRadius:0,tension:.4},{label:`Current: ${e}^${t}`,data:r.map(e=>e===t?a:null),borderColor:"#E89B6F",backgroundColor:"#E89B6F",pointRadius:8,pointHoverRadius:10,showLine:!1}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"top"},title:{display:!0,text:`Exponential Function: ${e}^x`,font:{size:16,weight:"bold"}}},scales:{x:{title:{display:!0,text:"Exponent (x)"}},y:{title:{display:!0,text:"Result"},type:"logarithmic"}}}})}function showResult(e){const t=document.getElementById("result");t.innerHTML=e,t.style.display="block",window.scrollTo&&window.scrollTo({top:t.offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>

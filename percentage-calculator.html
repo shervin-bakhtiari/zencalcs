@@ -169,5 +169,8 @@
             </div>
         `;showResult(n),chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("percentChart").getContext("2d"),{type:"bar",data:{labels:["Value 1","Value 2"],datasets:[{label:"Values",data:[e,t],backgroundColor:["#2C5F6F","#6B9080"],borderWidth:0}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{display:!1},title:{display:!0,text:`${a.toFixed(2)}% difference`,font:{size:16,weight:"bold"}}},scales:{y:{beginAtZero:!0}}}})}function showResult(e){const t=document.getElementById("result");t.innerHTML=e,t.style.display="block",window.scrollTo&&window.scrollTo({top:t.offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>

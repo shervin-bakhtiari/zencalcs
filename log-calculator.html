@@ -147,5 +147,8 @@
             </div>
         `;showResult(l),chartInstance&&chartInstance.destroy();const s=[],r=[];let c=.1,i=Math.max(100,2*e);for(let a=c;a<=i;a+=i/100){s.push(a.toFixed(2));const e="e"===currentBase?Math.log(a):2===t?Math.log2(a):Math.log(a)/Math.log(t);r.push(e)}chartInstance=new Chart(document.getElementById("logChart").getContext("2d"),{type:"line",data:{labels:s,datasets:[{label:`f(x) = log${t===Math.E?"(e)":"_"+t}(x)`,data:r,borderColor:"#2C5F6F",backgroundColor:"rgba(44, 95, 111, 0.1)",borderWidth:2,pointRadius:0,tension:.4},{label:`Current: ${n} = ${a.toFixed(3)}`,data:s.map(t=>parseFloat(t)===e?a:null),borderColor:"#E89B6F",backgroundColor:"#E89B6F",pointRadius:8,pointHoverRadius:10,showLine:!1}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"top"},title:{display:!0,text:`Logarithmic Function: log${t===Math.E?"(e)":"_"+t}(x)`,font:{size:16,weight:"bold"}}},scales:{x:{title:{display:!0,text:"x"},ticks:{maxTicksLimit:10}},y:{title:{display:!0,text:`log${t===Math.E?"(e)":"_"+t}(x)`}}}}})}function showResult(e){const t=document.getElementById("result");t.innerHTML=e,t.style.display="block",window.scrollTo&&window.scrollTo({top:t.offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>

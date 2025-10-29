@@ -201,5 +201,8 @@
                 </div>
             `,f=document.getElementById("result");if(f.innerHTML=y,f.style.display="block",chartInstance&&chartInstance.destroy(),chartInstance=new Chart(document.getElementById("macroChart").getContext("2d"),{type:"doughnut",data:{labels:["Carbs","Protein","Fat"],datasets:[{data:[Math.round(m),Math.round(g),Math.round(p)],backgroundColor:["#2C5F6F","#6B9080","#E89B6F"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:!0,maintainAspectRatio:!1,plugins:{legend:{position:"bottom"},title:{display:!0,text:"Macro Distribution (grams)",font:{size:16,weight:"bold"}},tooltip:{callbacks:{label:function(e){const t=e.parsed,a=["Carbs","Protein","Fat"][e.dataIndex],n=["4 cal/g","4 cal/g","9 cal/g"][e.dataIndex];return`${a}: ${t}g (${n})`}}}}}}),window.scrollTo)window.scrollTo({top:document.getElementById("result").offsetTop-100,behavior:"smooth"})}
     </script>
+    <!-- AI Chat Assistant -->
+    <link rel="stylesheet" href="css/ai-chat.css">
+    <script src="js/ai-chat.js"></script>
 </body>
 </html>
