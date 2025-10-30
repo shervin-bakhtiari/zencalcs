@@ -248,7 +248,19 @@ class AIChatAssistant {
 
         const avatar = document.createElement('div');
         avatar.className = 'ai-chat-message-avatar';
-        avatar.textContent = role === 'user' ? '👤' : '🤖';
+
+        if (role === 'user') {
+            avatar.textContent = '👤';
+        } else {
+            // Use high-quality logo for AI assistant
+            const logoImg = document.createElement('img');
+            logoImg.src = 'android-chrome-192x192.png';
+            logoImg.alt = 'ZenCalcs';
+            logoImg.style.width = '24px';
+            logoImg.style.height = '24px';
+            logoImg.style.borderRadius = '4px';
+            avatar.appendChild(logoImg);
+        }
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'ai-chat-message-content';

@@ -333,7 +333,7 @@
             <div class="ai-chat-container">
                 <div class="ai-chat-response-area" id="responseArea">
                     <div class="ai-empty-state">
-                        <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
+                        <img src="android-chrome-192x192.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
                         <h3>Ready to Help</h3>
                         <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
                     </div>
@@ -611,7 +611,7 @@
             loadingDiv.id = 'loadingIndicator';
             loadingDiv.innerHTML = `
                 <div class="ai-message-header">
-                    <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
+                    <img src="android-chrome-192x192.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
                     <h4>AI Assistant</h4>
                 </div>
                 <div class="ai-message-content" style="opacity: 0.6;">
@@ -682,7 +682,7 @@
             } else if (role === 'assistant') {
                 headerHTML = `
                     <div class="ai-message-header">
-                        <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
+                        <img src="android-chrome-192x192.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
                         <h4>AI Assistant</h4>
                     </div>
                 `;
@@ -741,20 +741,32 @@
                 return;
             }
 
+            console.log('Starting report generation...');
+            console.log('Conversation history:', conversationHistory);
+
             // Load html2pdf library if not already loaded
             if (typeof html2pdf === 'undefined') {
+                console.log('Loading html2pdf library...');
                 const script = document.createElement('script');
                 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
                 script.onload = async () => {
+                    console.log('html2pdf library loaded successfully');
                     await requestReportFromAI();
+                };
+                script.onerror = (error) => {
+                    console.error('Failed to load html2pdf library:', error);
+                    addMessage('error', 'Failed to load PDF library. Please check your internet connection and try again.');
                 };
                 document.head.appendChild(script);
             } else {
+                console.log('html2pdf library already loaded');
                 await requestReportFromAI();
             }
         }
 
         async function requestReportFromAI() {
+            console.log('Requesting report from AI...');
+
             // Show loading message
             addMessage('assistant', 'Generating your calculation report...');
 
@@ -770,13 +782,24 @@
                     })
                 });
 
+                console.log('API response status:', response.status);
+
                 if (!response.ok) {
-                    throw new Error('Failed to generate report');
+                    const errorText = await response.text();
+                    console.error('API error response:', errorText);
+                    throw new Error(`API returned ${response.status}: ${errorText}`);
                 }
 
                 const data = await response.json();
+                console.log('Report data received:', data);
+
+                // Check if html2pdf is available
+                if (typeof html2pdf === 'undefined') {
+                    throw new Error('html2pdf library is not loaded');
+                }
 
                 // Create PDF
+                console.log('Creating PDF...');
                 createPDF(data.response);
 
                 // Show success message
@@ -784,43 +807,67 @@
 
             } catch (error) {
                 console.error('Error generating report:', error);
-                addMessage('error', 'Sorry, I encountered an error generating the report. Please try again later.');
+                console.error('Error details:', {
+                    message: error.message,
+                    stack: error.stack
+                });
+                addMessage('error', `Sorry, I encountered an error generating the report: ${error.message}`);
             }
         }
 
         function createPDF(reportContent) {
-            // Convert markdown to formatted HTML
-            const formattedContent = formatReportForPDF(reportContent);
+            try {
+                console.log('Creating PDF with content length:', reportContent.length);
 
-            // Create temporary container
-            const pdfContainer = document.createElement('div');
-            pdfContainer.style.padding = '40px';
-            pdfContainer.style.fontFamily = 'Arial, sans-serif';
-            pdfContainer.style.fontSize = '12px';
-            pdfContainer.style.lineHeight = '1.6';
-            pdfContainer.style.color = '#2D3748';
-            pdfContainer.innerHTML = `
-                <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
-                    <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
-                    <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Calculation Report</p>
-                </div>
-                ${formattedContent}
-                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
-                    <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
-                </div>
-            `;
+                // Convert markdown to formatted HTML
+                const formattedContent = formatReportForPDF(reportContent);
+                console.log('Content formatted for PDF');
 
-            // PDF options
-            const opt = {
-                margin: 0.5,
-                filename: `ZenCalcs-Report-${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
+                // Create temporary container
+                const pdfContainer = document.createElement('div');
+                pdfContainer.style.padding = '40px';
+                pdfContainer.style.fontFamily = 'Arial, sans-serif';
+                pdfContainer.style.fontSize = '12px';
+                pdfContainer.style.lineHeight = '1.6';
+                pdfContainer.style.color = '#2D3748';
+                pdfContainer.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
+                        <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
+                        <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Calculation Report</p>
+                    </div>
+                    ${formattedContent}
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
+                        <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
+                    </div>
+                `;
 
-            // Generate and download
-            html2pdf().set(opt).from(pdfContainer).save();
+                console.log('PDF container created');
+
+                // PDF options
+                const opt = {
+                    margin: 0.5,
+                    filename: `ZenCalcs-Report-${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                console.log('Generating PDF with options:', opt);
+
+                // Generate and download
+                html2pdf().set(opt).from(pdfContainer).save()
+                    .then(() => {
+                        console.log('PDF generated and downloaded successfully');
+                    })
+                    .catch((error) => {
+                        console.error('Error during PDF generation:', error);
+                        throw error;
+                    });
+
+            } catch (error) {
+                console.error('Error in createPDF function:', error);
+                throw error;
+            }
         }
 
         function formatReportForPDF(text) {
@@ -846,7 +893,7 @@
             conversationHistory = [];
             document.getElementById('responseArea').innerHTML = `
                 <div class="ai-empty-state">
-                    <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
+                    <img src="android-chrome-192x192.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
                     <h3>Ready to Help</h3>
                     <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
                 </div>
