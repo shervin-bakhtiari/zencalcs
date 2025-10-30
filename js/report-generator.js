@@ -29,8 +29,21 @@ class ReportGenerator {
         analysisData = ConversationAnalyzer.analyzeSimple(conversationHistory);
       }
 
-      // Initialize jsPDF (UMD module exposes as window.jspdf.jsPDF)
-      const { jsPDF } = window.jspdf;
+      // Check if jsPDF is available
+      console.log('Checking jsPDF availability...');
+      console.log('window.jspdf:', window.jspdf);
+      console.log('window.jsPDF:', window.jsPDF);
+
+      // Initialize jsPDF - try different ways the CDN might expose it
+      let jsPDF;
+      if (window.jspdf && window.jspdf.jsPDF) {
+        jsPDF = window.jspdf.jsPDF;
+      } else if (window.jsPDF) {
+        jsPDF = window.jsPDF;
+      } else {
+        throw new Error('jsPDF library not loaded. Please refresh the page and try again.');
+      }
+
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
