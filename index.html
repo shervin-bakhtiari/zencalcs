@@ -94,22 +94,56 @@
         .ai-chat-section { background: #FFFFFF; border-radius: 20px; padding: 50px 40px; margin-bottom: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #E5E7EB; }
         .ai-chat-section h2 { text-align: center; color: #2D3748; font-size: 2.5em; margin-bottom: 15px; font-weight: 700; }
         .ai-chat-section .subtitle { text-align: center; color: #6B7280; font-size: 1.1em; margin-bottom: 40px; }
-        .ai-chat-container { max-width: 900px; margin: 0 auto; }
-        .ai-chat-input-area { display: flex; gap: 15px; margin-bottom: 30px; }
-        .ai-chat-input-area textarea { flex: 1; padding: 18px 20px; border: 2px solid #E5E7EB; border-radius: 12px; font-size: 1em; font-family: 'Inter', sans-serif; resize: none; min-height: 60px; transition: all 0.3s; }
-        .ai-chat-input-area textarea:focus { outline: none; border-color: #2C5F6F; box-shadow: 0 0 0 3px rgba(44, 95, 111, 0.1); }
-        .ai-chat-input-area button { padding: 18px 35px; background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); color: white; border: none; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
-        .ai-chat-input-area button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(44, 95, 111, 0.3); }
-        .ai-chat-response-area { background: #F8F9FA; border-radius: 15px; padding: 30px; min-height: 300px; margin-bottom: 20px; }
+        .ai-chat-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; }
+
+        /* Response Area - Scrollable chat history */
+        .ai-chat-response-area { background: #F8F9FA; border-radius: 15px; padding: 30px; min-height: 300px; max-height: 500px; overflow-y: auto; margin-bottom: 20px; order: 1; }
+        .ai-chat-response-area::-webkit-scrollbar { width: 8px; }
+        .ai-chat-response-area::-webkit-scrollbar-track { background: #E5E7EB; border-radius: 4px; }
+        .ai-chat-response-area::-webkit-scrollbar-thumb { background: #2C5F6F; border-radius: 4px; }
+        .ai-chat-response-area::-webkit-scrollbar-thumb:hover { background: #1F4A56; }
+
+        /* Messages */
         .ai-message { background: #FFFFFF; padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #2C5F6F; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .ai-message.user { border-left-color: #6B7280; }
+        .ai-message.error { border-left-color: #EF4444; }
         .ai-message-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         .ai-message-header svg { width: 24px; height: 24px; color: #2C5F6F; }
         .ai-message-header h4 { margin: 0; color: #2D3748; font-size: 1.1em; }
         .ai-message-content { color: #4B5563; line-height: 1.8; font-size: 1.05em; }
         .ai-message-content strong { color: #2C5F6F; font-weight: 600; }
-        .ai-action-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
-        .ai-action-btn { padding: 12px 20px; background: #FFFFFF; border: 2px solid #2C5F6F; color: #2C5F6F; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.95em; display: flex; align-items: center; gap: 8px; }
-        .ai-action-btn:hover { background: #2C5F6F; color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.2); }
+
+        /* Enhanced Message Formatting */
+        .ai-message-content .message-heading { color: #2C5F6F; font-size: 1.3em; font-weight: 600; margin: 16px 0 8px 0; padding-bottom: 6px; border-bottom: 2px solid #E5E7EB; }
+        .ai-message-content .message-heading:first-child { margin-top: 0; }
+        .ai-message-content .message-subheading { color: #1E40AF; font-size: 1.1em; font-weight: 600; margin: 12px 0 6px 0; }
+        .ai-message-content .message-bullet { padding-left: 8px; margin: 4px 0; line-height: 1.6; }
+        .ai-message-content .message-numbered { padding-left: 24px; margin: 4px 0; line-height: 1.6; position: relative; counter-increment: message-counter; }
+        .ai-message-content .message-numbered:before { content: counter(message-counter) ". "; position: absolute; left: 0; font-weight: 600; color: #2C5F6F; }
+
+        /* Typing Indicator */
+        .typing-indicator { display: flex; gap: 6px; align-items: center; }
+        .typing-indicator span { width: 8px; height: 8px; border-radius: 50%; background: #2C5F6F; animation: typing-bounce 1.4s infinite ease-in-out; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing-bounce { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+
+        /* Input Area */
+        .ai-chat-input-area { display: flex; gap: 15px; margin-bottom: 15px; order: 2; }
+        .ai-chat-input-area textarea { flex: 1; padding: 18px 20px; border: 2px solid #E5E7EB; border-radius: 12px; font-size: 1em; font-family: 'Inter', sans-serif; resize: none; min-height: 60px; transition: all 0.3s; }
+        .ai-chat-input-area textarea:focus { outline: none; border-color: #2C5F6F; box-shadow: 0 0 0 3px rgba(44, 95, 111, 0.1); }
+        .ai-chat-input-area button { padding: 18px 35px; background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); color: white; border: none; border-radius: 12px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .ai-chat-input-area button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(44, 95, 111, 0.3); }
+
+        /* Action Buttons Area */
+        .ai-chat-actions-area { display: flex; gap: 12px; order: 3; }
+        .ai-action-btn { flex: 1; padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.95em; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; }
+        .ai-action-btn.primary { background: linear-gradient(135deg, #2C5F6F 0%, #1E40AF 100%); color: white; }
+        .ai-action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44, 95, 111, 0.3); }
+        .ai-action-btn.secondary { background: #FFFFFF; border: 2px solid #2C5F6F; color: #2C5F6F; }
+        .ai-action-btn.secondary:hover { background: #F8F9FA; transform: translateY(-2px); }
+
+        /* Empty State */
         .ai-empty-state { text-align: center; padding: 60px 20px; color: #9CA3AF; }
         .ai-empty-state svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3; }
         .ai-empty-state h3 { color: #6B7280; font-size: 1.3em; margin-bottom: 10px; }
@@ -175,6 +209,11 @@
             .hamburger span { width: 24px; }
             .ai-chat-section { padding: 30px 20px; }
             .ai-chat-section h2 { font-size: 1.8em; }
+            .ai-chat-response-area { max-height: 400px; padding: 20px; }
+            .ai-chat-input-area { flex-direction: column; }
+            .ai-chat-input-area button { width: 100%; }
+            .ai-chat-actions-area { flex-direction: column; }
+            .ai-action-btn { width: 100%; }
             .ai-chat-input-area { flex-direction: column; }
             .ai-chat-input-area button { width: 100%; }
             .ai-action-buttons { flex-direction: column; }
@@ -292,6 +331,14 @@
             <p class="subtitle">Ask any calculation question - financial, health, math, or conversions</p>
 
             <div class="ai-chat-container">
+                <div class="ai-chat-response-area" id="responseArea">
+                    <div class="ai-empty-state">
+                        <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
+                        <h3>Ready to Help</h3>
+                        <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
+                    </div>
+                </div>
+
                 <div class="ai-chat-input-area">
                     <textarea
                         id="aiQuestion"
@@ -301,14 +348,19 @@
                     <button onclick="askAI()">Ask AI</button>
                 </div>
 
-                <div class="ai-chat-response-area" id="responseArea">
-                    <div class="ai-empty-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <div class="ai-chat-actions-area">
+                    <button class="ai-action-btn primary" onclick="generateReport()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <h3>Ready to Help</h3>
-                        <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
-                    </div>
+                        Generate Report
+                    </button>
+                    <button class="ai-action-btn secondary" onclick="clearChat()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Start New Calculation
+                    </button>
                 </div>
             </div>
         </div>
@@ -544,20 +596,32 @@
             // Clear input
             questionInput.value = '';
 
-            // Show loading state
-            responseArea.innerHTML = `
-                <div class="ai-message">
-                    <div class="ai-message-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        <h4>Analyzing your question...</h4>
-                    </div>
-                    <div class="ai-message-content" style="opacity: 0.6;">
-                        Processing your calculation request...
+            // Remove empty state if present
+            const emptyState = responseArea.querySelector('.ai-empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            // Add user message
+            addMessage('user', question);
+
+            // Show loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'ai-message loading';
+            loadingDiv.id = 'loadingIndicator';
+            loadingDiv.innerHTML = `
+                <div class="ai-message-header">
+                    <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
+                    <h4>AI Assistant</h4>
+                </div>
+                <div class="ai-message-content" style="opacity: 0.6;">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
                     </div>
                 </div>
             `;
+            responseArea.appendChild(loadingDiv);
+            responseArea.scrollTop = responseArea.scrollHeight;
 
             try {
                 // Call AI API
@@ -578,93 +642,91 @@
 
                 const data = await response.json();
 
+                // Remove loading indicator
+                const loader = document.getElementById('loadingIndicator');
+                if (loader) loader.remove();
+
                 // Update conversation history
                 conversationHistory.push(
                     { role: 'user', content: question },
                     { role: 'assistant', content: data.response }
                 );
 
-                // Display response with action buttons
-                displayResponse(question, data.response);
+                // Add AI response
+                addMessage('assistant', data.response);
 
             } catch (error) {
                 console.error('Error:', error);
-                responseArea.innerHTML = `
-                    <div class="ai-message">
-                        <div class="ai-message-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            <h4>Error</h4>
-                        </div>
-                        <div class="ai-message-content">
-                            Sorry, I encountered an error. Please try again later.
-                        </div>
-                    </div>
-                `;
+                const loader = document.getElementById('loadingIndicator');
+                if (loader) loader.remove();
+
+                addMessage('error', 'Sorry, I encountered an error. Please try again later.');
             }
         }
 
-        function displayResponse(question, answer) {
+        function addMessage(role, content) {
             const responseArea = document.getElementById('responseArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${role}`;
 
-            responseArea.innerHTML = `
-                <div class="ai-message">
+            let headerHTML = '';
+            if (role === 'user') {
+                headerHTML = `
                     <div class="ai-message-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        <h4>Your Question</h4>
+                        <h4>You</h4>
                     </div>
-                    <div class="ai-message-content">
-                        ${escapeHtml(question)}
-                    </div>
-                </div>
-
-                <div class="ai-message">
+                `;
+            } else if (role === 'assistant') {
+                headerHTML = `
                     <div class="ai-message-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 24px; height: 24px;">
+                        <h4>AI Assistant</h4>
+                    </div>
+                `;
+            } else if (role === 'error') {
+                headerHTML = `
+                    <div class="ai-message-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
-                        <h4>AI Response</h4>
+                        <h4>Error</h4>
                     </div>
-                    <div class="ai-message-content">
-                        ${formatAnswer(answer)}
-                    </div>
-                    <div class="ai-action-buttons">
-                        <button class="ai-action-btn" onclick="askFollowUp()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                            </svg>
-                            Ask Follow-Up Question
-                        </button>
-                        <button class="ai-action-btn" onclick="requestTable()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                            Show as Table
-                        </button>
-                        <button class="ai-action-btn" onclick="requestGraph()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            Visualize with Graph
-                        </button>
-                        <button class="ai-action-btn" onclick="clearChat()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                            </svg>
-                            Start New Calculation
-                        </button>
-                    </div>
+                `;
+            }
+
+            messageDiv.innerHTML = `
+                ${headerHTML}
+                <div class="ai-message-content">
+                    ${role === 'user' || role === 'error' ? escapeHtml(content) : formatAnswer(content)}
                 </div>
             `;
+
+            responseArea.appendChild(messageDiv);
+            responseArea.scrollTop = responseArea.scrollHeight;
         }
 
         function formatAnswer(text) {
-            return text
+            // Enhanced formatting with headings, subheadings, lists
+            let formatted = text
+                // Convert ### Subheadings to h4
+                .replace(/^### (.+)$/gm, '<h4 class="message-subheading">$1</h4>')
+                // Convert ## Headings to h3
+                .replace(/^## (.+)$/gm, '<h3 class="message-heading">$1</h3>')
+                // Convert # Main Headings to h3
+                .replace(/^# (.+)$/gm, '<h3 class="message-heading">$1</h3>')
+                // Convert **bold** to strong
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Convert bullet points
+                .replace(/^- (.+)$/gm, '<div class="message-bullet">• $1</div>')
+                // Convert numbered lists
+                .replace(/^\d+\. (.+)$/gm, '<div class="message-numbered">$1</div>')
+                // Convert line breaks
                 .replace(/\n/g, '<br>');
+
+            return formatted;
         }
 
         function escapeHtml(text) {
@@ -673,27 +735,118 @@
             return div.innerHTML;
         }
 
-        function askFollowUp() {
-            document.getElementById('aiQuestion').focus();
+        async function generateReport() {
+            if (conversationHistory.length === 0) {
+                alert('There are no calculations to report yet. Please start a conversation first.');
+                return;
+            }
+
+            // Load html2pdf library if not already loaded
+            if (typeof html2pdf === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+                script.onload = async () => {
+                    await requestReportFromAI();
+                };
+                document.head.appendChild(script);
+            } else {
+                await requestReportFromAI();
+            }
         }
 
-        function requestTable() {
-            document.getElementById('aiQuestion').value = 'Can you show this as a detailed table?';
-            askAI();
+        async function requestReportFromAI() {
+            // Show loading message
+            addMessage('assistant', 'Generating your calculation report...');
+
+            try {
+                const response = await fetch('/.netlify/functions/ai-chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: 'Please generate a comprehensive calculation report based on our conversation. Include: 1) A title "ZenCalcs Calculation Report", 2) Today\'s date, 3) Professional executive summary, 4) All inputs provided, 5) All calculation results with clear sections and headings, 6) Key insights and recommendations. Format with ## for main headings and ### for subheadings. Make it professional and suitable for PDF export.',
+                        conversationHistory: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate report');
+                }
+
+                const data = await response.json();
+
+                // Create PDF
+                createPDF(data.response);
+
+                // Show success message
+                addMessage('assistant', '📊 Your calculation report has been generated and downloaded as a PDF file.');
+
+            } catch (error) {
+                console.error('Error generating report:', error);
+                addMessage('error', 'Sorry, I encountered an error generating the report. Please try again later.');
+            }
         }
 
-        function requestGraph() {
-            document.getElementById('aiQuestion').value = 'Can you create a visual graph or chart for this data?';
-            askAI();
+        function createPDF(reportContent) {
+            // Convert markdown to formatted HTML
+            const formattedContent = formatReportForPDF(reportContent);
+
+            // Create temporary container
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.padding = '40px';
+            pdfContainer.style.fontFamily = 'Arial, sans-serif';
+            pdfContainer.style.fontSize = '12px';
+            pdfContainer.style.lineHeight = '1.6';
+            pdfContainer.style.color = '#2D3748';
+            pdfContainer.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
+                    <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
+                    <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Calculation Report</p>
+                </div>
+                ${formattedContent}
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
+                    <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
+                </div>
+            `;
+
+            // PDF options
+            const opt = {
+                margin: 0.5,
+                filename: `ZenCalcs-Report-${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Generate and download
+            html2pdf().set(opt).from(pdfContainer).save();
+        }
+
+        function formatReportForPDF(text) {
+            let formatted = text
+                .replace(/^## (.+)$/gm, '<h2 style="color: #2C5F6F; font-size: 18px; margin: 20px 0 10px 0; border-bottom: 2px solid #E5E7EB; padding-bottom: 5px;">$1</h2>')
+                .replace(/^### (.+)$/gm, '<h3 style="color: #1E40AF; font-size: 14px; margin: 15px 0 8px 0; font-weight: 600;">$1</h3>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2C5F6F;">$1</strong>')
+                .replace(/^- (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">• $1</div>')
+                .replace(/^\d+\. (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">$1</div>')
+                .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
+                .replace(/\n/g, '<br>');
+
+            return `<div style="line-height: 1.6;">${formatted}</div>`;
         }
 
         function clearChat() {
+            if (conversationHistory.length > 0) {
+                if (!confirm('Are you sure you want to start a new calculation? This will clear the current conversation.')) {
+                    return;
+                }
+            }
+
             conversationHistory = [];
             document.getElementById('responseArea').innerHTML = `
                 <div class="ai-empty-state">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
+                    <img src="favicon-32x32.png" alt="ZenCalcs" style="width: 40px; height: 40px; margin-bottom: 10px;">
                     <h3>Ready to Help</h3>
                     <p>Ask me anything - I can handle financial calculations, health metrics, math problems, and more!</p>
                 </div>
