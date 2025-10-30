@@ -71,11 +71,13 @@ class ReportGenerator {
         checkPageBreak(15);
         if (level === 1) {
           doc.setFontSize(16);
-          doc.setTextColor(this.colors.primary);
+          const rgb = this.hexToRgb(this.colors.primary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'bold');
         } else {
           doc.setFontSize(12);
-          doc.setTextColor(this.colors.secondary);
+          const rgb = this.hexToRgb(this.colors.secondary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'bold');
         }
         doc.text(text, margin, yPos);
@@ -83,7 +85,8 @@ class ReportGenerator {
 
         // Add underline for main headings
         if (level === 1) {
-          doc.setDrawColor(this.colors.border);
+          const rgb = this.hexToRgb(this.colors.border);
+          doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
           doc.setLineWidth(0.5);
           doc.line(margin, yPos - 2, pageWidth - margin, yPos - 2);
           yPos += 4;
@@ -93,7 +96,8 @@ class ReportGenerator {
       // Helper function to add body text
       const addBodyText = (text, indent = 0) => {
         doc.setFontSize(10);
-        doc.setTextColor(this.colors.textPrimary);
+        const rgb = this.hexToRgb(this.colors.textPrimary);
+        doc.setTextColor(rgb[0], rgb[1], rgb[2]);
         doc.setFont(undefined, 'normal');
 
         const lines = doc.splitTextToSize(text, contentWidth - indent);
@@ -105,7 +109,8 @@ class ReportGenerator {
       };
 
       // 1. REPORT HEADER
-      doc.setFillColor(this.colors.primary);
+      const primaryRgb = this.hexToRgb(this.colors.primary);
+      doc.setFillColor(primaryRgb[0], primaryRgb[1], primaryRgb[2]);
       doc.rect(0, 0, pageWidth, 40, 'F');
 
       doc.setTextColor(255, 255, 255);
@@ -134,15 +139,18 @@ class ReportGenerator {
         addSectionHeading('Executive Summary', 1);
 
         // Key Result Box
-        doc.setFillColor(this.hexToRgb(this.colors.backgroundLight));
+        const bgRgb = this.hexToRgb(this.colors.backgroundLight);
+        doc.setFillColor(bgRgb[0], bgRgb[1], bgRgb[2]);
         doc.roundedRect(margin, yPos, contentWidth, 25, 3, 3, 'F');
 
         doc.setFontSize(11);
-        doc.setTextColor(this.colors.textSecondary);
+        const textSecRgb = this.hexToRgb(this.colors.textSecondary);
+        doc.setTextColor(textSecRgb[0], textSecRgb[1], textSecRgb[2]);
         doc.text('Key Result:', margin + 5, yPos + 7);
 
         doc.setFontSize(16);
-        doc.setTextColor(this.colors.primary);
+        const primRgb = this.hexToRgb(this.colors.primary);
+        doc.setTextColor(primRgb[0], primRgb[1], primRgb[2]);
         doc.setFont(undefined, 'bold');
         doc.text(analysisData.executiveSummary.keyResult || 'See details below', margin + 5, yPos + 15);
 
@@ -151,13 +159,15 @@ class ReportGenerator {
         // Quick Facts
         if (analysisData.executiveSummary.quickFacts && analysisData.executiveSummary.quickFacts.length > 0) {
           doc.setFontSize(11);
-          doc.setTextColor(this.colors.textSecondary);
+          let rgb = this.hexToRgb(this.colors.textSecondary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'bold');
           doc.text('Quick Facts:', margin, yPos);
           yPos += 6;
 
           doc.setFont(undefined, 'normal');
-          doc.setTextColor(this.colors.textPrimary);
+          rgb = this.hexToRgb(this.colors.textPrimary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           analysisData.executiveSummary.quickFacts.forEach(fact => {
             checkPageBreak(6);
             doc.text('• ' + fact, margin + 5, yPos);
@@ -169,7 +179,8 @@ class ReportGenerator {
         // Bottom Line
         if (analysisData.executiveSummary.bottomLine) {
           doc.setFontSize(10);
-          doc.setTextColor(this.colors.textPrimary);
+          const rgb = this.hexToRgb(this.colors.textPrimary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'italic');
           const bottomLineLines = doc.splitTextToSize(analysisData.executiveSummary.bottomLine, contentWidth);
           bottomLineLines.forEach(line => {
@@ -234,7 +245,8 @@ class ReportGenerator {
           analysisData.methodology.assumptions.forEach(assumption => {
             checkPageBreak(6);
             doc.setFontSize(10);
-            doc.setTextColor(this.colors.textPrimary);
+            const rgb = this.hexToRgb(this.colors.textPrimary);
+            doc.setTextColor(rgb[0], rgb[1], rgb[2]);
             doc.text('• ' + assumption, margin + 3, yPos);
             yPos += 5;
           });
@@ -246,7 +258,8 @@ class ReportGenerator {
           analysisData.methodology.limitations.forEach(limitation => {
             checkPageBreak(6);
             doc.setFontSize(10);
-            doc.setTextColor(this.colors.textSecondary);
+            const rgb = this.hexToRgb(this.colors.textSecondary);
+            doc.setTextColor(rgb[0], rgb[1], rgb[2]);
             doc.text('• ' + limitation, margin + 3, yPos);
             yPos += 5;
           });
@@ -260,15 +273,19 @@ class ReportGenerator {
         addSectionHeading('Results', 1);
 
         if (analysisData.results.primary) {
-          doc.setFillColor(this.hexToRgb(this.colors.success) + '20');
+          // Light success color with transparency (approximate with lighter RGB)
+          const successRgb = this.hexToRgb(this.colors.success);
+          doc.setFillColor(successRgb[0] + 40, successRgb[1] + 40, successRgb[2] + 40);
           doc.roundedRect(margin, yPos, contentWidth, 20, 3, 3, 'F');
 
           doc.setFontSize(11);
-          doc.setTextColor(this.colors.textSecondary);
+          let rgb = this.hexToRgb(this.colors.textSecondary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.text(analysisData.results.primary.description || 'Primary Result:', margin + 5, yPos + 7);
 
           doc.setFontSize(14);
-          doc.setTextColor(this.colors.success);
+          rgb = this.hexToRgb(this.colors.success);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'bold');
           doc.text(analysisData.results.primary.value, margin + 5, yPos + 15);
 
@@ -375,15 +392,18 @@ class ReportGenerator {
           checkPageBreak(10);
 
           // Insight box
-          doc.setFillColor(this.hexToRgb(this.colors.backgroundLight));
+          const bgRgb = this.hexToRgb(this.colors.backgroundLight);
+          doc.setFillColor(bgRgb[0], bgRgb[1], bgRgb[2]);
           doc.roundedRect(margin, yPos, contentWidth, 12, 2, 2, 'F');
 
           doc.setFontSize(10);
-          doc.setTextColor(this.colors.primary);
+          let rgb = this.hexToRgb(this.colors.primary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'bold');
           doc.text(`${index + 1}.`, margin + 3, yPos + 7);
 
-          doc.setTextColor(this.colors.textPrimary);
+          rgb = this.hexToRgb(this.colors.textPrimary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.setFont(undefined, 'normal');
           const insightLines = doc.splitTextToSize(insight, contentWidth - 15);
           doc.text(insightLines[0], margin + 8, yPos + 7);
@@ -402,10 +422,12 @@ class ReportGenerator {
         analysisData.recommendations.forEach((rec, index) => {
           checkPageBreak(8);
           doc.setFontSize(10);
-          doc.setTextColor(this.colors.success);
+          let rgb = this.hexToRgb(this.colors.success);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           doc.text('✓', margin, yPos);
 
-          doc.setTextColor(this.colors.textPrimary);
+          rgb = this.hexToRgb(this.colors.textPrimary);
+          doc.setTextColor(rgb[0], rgb[1], rgb[2]);
           const recLines = doc.splitTextToSize(rec, contentWidth - 10);
           doc.text(recLines, margin + 5, yPos);
           yPos += 6;
@@ -416,10 +438,11 @@ class ReportGenerator {
 
       // 10. FOOTER
       const pageCount = doc.internal.getNumberOfPages();
+      const footerRgb = this.hexToRgb(this.colors.textSecondary);
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
-        doc.setTextColor(this.colors.textSecondary);
+        doc.setTextColor(footerRgb[0], footerRgb[1], footerRgb[2]);
         doc.text(
           `Page ${i} of ${pageCount}`,
           pageWidth / 2,
