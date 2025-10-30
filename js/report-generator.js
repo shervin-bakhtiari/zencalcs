@@ -29,7 +29,8 @@ class ReportGenerator {
         analysisData = ConversationAnalyzer.analyzeSimple(conversationHistory);
       }
 
-      // Initialize jsPDF
+      // Initialize jsPDF (UMD module exposes as window.jspdf.jsPDF)
+      const { jsPDF } = window.jspdf;
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
