@@ -95,6 +95,20 @@ class AIChatAssistant {
                         </svg>
                     </button>
                 </div>
+                <div class="ai-chat-actions">
+                    <button class="ai-chat-action-button" id="aiChatGenerateReport" aria-label="Generate Report">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span>Generate Report</span>
+                    </button>
+                    <button class="ai-chat-action-button secondary" id="aiChatNewCalculation" aria-label="Start New Calculation">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        <span>Start New Calculation</span>
+                    </button>
+                </div>
             </div>
         `;
 
@@ -108,6 +122,8 @@ class AIChatAssistant {
         this.messagesContainer = document.getElementById('aiChatMessages');
         this.input = document.getElementById('aiChatInput');
         this.sendButton = document.getElementById('aiChatSend');
+        this.generateReportButton = document.getElementById('aiChatGenerateReport');
+        this.newCalculationButton = document.getElementById('aiChatNewCalculation');
 
         // Attach event listeners
         this.attachEventListeners();
@@ -144,6 +160,12 @@ class AIChatAssistant {
                 this.sendMessage();
             }
         });
+
+        // Generate Report button
+        this.generateReportButton.addEventListener('click', () => this.generateReport());
+
+        // New Calculation button
+        this.newCalculationButton.addEventListener('click', () => this.startNewCalculation());
     }
 
     toggleChat() {
@@ -242,9 +264,21 @@ class AIChatAssistant {
     }
 
     formatMessage(text) {
-        // Simple formatting: **bold** and line breaks
+        // Enhanced formatting with headings, subheadings, lists, and icons
         let formatted = text
+            // Convert ### Subheadings to h4
+            .replace(/^### (.+)$/gm, '<h4 class="message-subheading">$1</h4>')
+            // Convert ## Headings to h3
+            .replace(/^## (.+)$/gm, '<h3 class="message-heading">$1</h3>')
+            // Convert # Main Headings to h3 (same as ##)
+            .replace(/^# (.+)$/gm, '<h3 class="message-heading">$1</h3>')
+            // Convert **bold** to strong
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Convert bullet points with proper icons
+            .replace(/^- (.+)$/gm, '<div class="message-bullet">• $1</div>')
+            // Convert numbered lists
+            .replace(/^\d+\. (.+)$/gm, '<div class="message-numbered">$1</div>')
+            // Convert line breaks
             .replace(/\n/g, '<br>');
 
         return formatted;
@@ -284,6 +318,158 @@ class AIChatAssistant {
         setTimeout(() => {
             this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
         }, 100);
+    }
+
+    async generateReport() {
+        if (this.conversationHistory.length === 0) {
+            this.addMessage('assistant', 'There are no calculations to report yet. Please start a conversation first.');
+            return;
+        }
+
+        this.showLoading();
+
+        try {
+            const response = await fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: 'Please generate a comprehensive calculation report based on our conversation. Include: 1) A title "ZenCalcs Calculation Report", 2) Today\'s date, 3) Professional executive summary, 4) All inputs provided, 5) All calculation results with clear sections and headings, 6) Key insights and recommendations. Format with ## for main headings and ### for subheadings. Make it professional and suitable for PDF export.',
+                    conversationHistory: this.conversationHistory
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            this.hideLoading();
+
+            // Generate and download PDF
+            this.downloadReportAsPDF(data.response);
+
+            // Show confirmation message
+            this.addMessage('assistant', '📊 Your calculation report has been generated and downloaded as a PDF file.');
+
+        } catch (error) {
+            console.error('Error generating report:', error);
+            this.hideLoading();
+            this.addMessage('assistant', 'Sorry, I encountered an error generating the report. Please try again later.');
+        }
+    }
+
+    downloadReportAsPDF(reportContent) {
+        // Load html2pdf library dynamically if not already loaded
+        if (typeof html2pdf === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            script.onload = () => this.createPDF(reportContent);
+            document.head.appendChild(script);
+        } else {
+            this.createPDF(reportContent);
+        }
+    }
+
+    createPDF(reportContent) {
+        // Convert markdown-style formatting to HTML
+        const formattedContent = this.formatReportForPDF(reportContent);
+
+        // Create a temporary container for the PDF content
+        const pdfContainer = document.createElement('div');
+        pdfContainer.style.padding = '40px';
+        pdfContainer.style.fontFamily = 'Arial, sans-serif';
+        pdfContainer.style.fontSize = '12px';
+        pdfContainer.style.lineHeight = '1.6';
+        pdfContainer.style.color = '#2D3748';
+        pdfContainer.innerHTML = `
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
+                <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
+                <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Calculation Report</p>
+            </div>
+            ${formattedContent}
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
+                <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
+            </div>
+        `;
+
+        // PDF options
+        const opt = {
+            margin: 0.5,
+            filename: `ZenCalcs-Report-${new Date().toISOString().split('T')[0]}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        // Generate and download PDF
+        html2pdf().set(opt).from(pdfContainer).save();
+    }
+
+    formatReportForPDF(text) {
+        // Enhanced formatting specifically for PDF output
+        let formatted = text
+            // Convert ## Headings to h2
+            .replace(/^## (.+)$/gm, '<h2 style="color: #2C5F6F; font-size: 18px; margin: 20px 0 10px 0; border-bottom: 2px solid #E5E7EB; padding-bottom: 5px;">$1</h2>')
+            // Convert ### Subheadings to h3
+            .replace(/^### (.+)$/gm, '<h3 style="color: #1E40AF; font-size: 14px; margin: 15px 0 8px 0; font-weight: 600;">$1</h3>')
+            // Convert **bold** to strong
+            .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2C5F6F;">$1</strong>')
+            // Convert bullet points
+            .replace(/^- (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">• $1</div>')
+            // Convert numbered lists
+            .replace(/^\d+\. (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">$1</div>')
+            // Convert line breaks
+            .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
+            .replace(/\n/g, '<br>');
+
+        return `<div style="line-height: 1.6;">${formatted}</div>`;
+    }
+
+    startNewCalculation() {
+        if (this.conversationHistory.length > 0) {
+            const confirmClear = confirm('Are you sure you want to start a new calculation? This will clear the current conversation.');
+            if (!confirmClear) return;
+        }
+
+        // Clear conversation history
+        this.conversationHistory = [];
+
+        // Clear messages except welcome
+        this.messagesContainer.innerHTML = '';
+
+        // Show welcome message
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.className = 'ai-chat-welcome';
+        welcomeDiv.innerHTML = `
+            <div class="ai-chat-welcome-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+            </div>
+            <h4>Welcome to ZenCalcs AI Assistant</h4>
+            <p>Ask me anything - financial, health, math, or any other calculations!</p>
+            <div class="ai-chat-suggestions">
+                <div class="ai-chat-suggestion" data-suggestion="Calculate monthly payment for a $600,000 mortgage at 5.3% for 25 years">
+                    💰 Mortgage payment calculation
+                </div>
+                <div class="ai-chat-suggestion" data-suggestion="What's 15% of $3,450?">
+                    🧮 Quick percentage calculation
+                </div>
+                <div class="ai-chat-suggestion" data-suggestion="I'm 35, female, 5'6, 165 lbs. Calculate my BMI and daily calorie needs">
+                    🏃 Health & fitness calculations
+                </div>
+                <div class="ai-chat-suggestion" data-suggestion="Help me calculate the area of a triangle with sides 5, 7, and 8">
+                    📐 Geometry problem
+                </div>
+            </div>
+        `;
+        this.messagesContainer.appendChild(welcomeDiv);
+
+        // Clear input
+        this.input.value = '';
+        this.input.style.height = 'auto';
     }
 }
 
