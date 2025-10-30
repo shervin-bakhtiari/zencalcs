@@ -741,51 +741,58 @@
                 return;
             }
 
-            console.log('Starting report generation...');
+            console.log('Starting professional report generation...');
             console.log('Conversation history:', conversationHistory);
 
-            // Load html2pdf library if not already loaded
-            if (typeof html2pdf === 'undefined') {
-                console.log('Loading html2pdf library...');
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-                script.onload = async () => {
-                    console.log('html2pdf library loaded successfully');
-                    await requestReportFromAI();
-                };
-                script.onerror = (error) => {
-                    console.error('Failed to load html2pdf library:', error);
-                    addMessage('error', 'Failed to load PDF library. Please check your internet connection and try again.');
-                };
-                document.head.appendChild(script);
-            } else {
-                console.log('html2pdf library already loaded');
-                await requestReportFromAI();
-            }
-        }
-
-        async function requestReportFromAI() {
-            console.log('Generating report from conversation history...');
-
             // Show loading message
-            addMessage('assistant', 'Generating your calculation report...');
+            addMessage('assistant', 'Generating your professional calculation report with charts and insights...');
 
             try {
-                // Check if html2pdf is available
-                if (typeof html2pdf === 'undefined') {
-                    throw new Error('html2pdf library is not loaded');
+                let analysisData = null;
+
+                // Try to get AI-powered analysis from Netlify Function
+                try {
+                    console.log('Requesting AI-powered analysis from Netlify Function...');
+                    const response = await fetch('/.netlify/functions/analyze-conversation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            conversationHistory: conversationHistory
+                        })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success && result.analysis) {
+                            analysisData = result.analysis;
+                            console.log('✓ AI-powered analysis received');
+                        }
+                    } else {
+                        console.warn('Netlify Function returned non-OK status:', response.status);
+                    }
+                } catch (apiError) {
+                    console.warn('Netlify Function unavailable, using client-side analysis:', apiError.message);
                 }
 
-                // Generate report content from conversation history
-                const reportContent = generateReportContent();
-                console.log('Report content generated from conversation history');
+                // If API failed, use client-side analyzer
+                if (!analysisData) {
+                    console.log('Using client-side conversation analyzer...');
+                    analysisData = window.ConversationAnalyzer.analyzeSimple(conversationHistory);
+                }
 
-                // Create PDF
-                console.log('Creating PDF...');
-                createPDF(reportContent);
+                // Generate PDF using ReportGenerator
+                console.log('Generating PDF report...');
+                const reportGenerator = new window.ReportGenerator();
+                const result = await reportGenerator.generateReport(conversationHistory, analysisData);
 
-                // Show success message
-                addMessage('assistant', '📊 Your calculation report has been generated and downloaded as a PDF file.');
+                if (result.success) {
+                    console.log('✓ Report generated successfully:', result.filename);
+                    addMessage('assistant', `✓ Your professional calculation report has been generated and downloaded as ${result.filename}`);
+                } else {
+                    throw new Error('Report generation failed');
+                }
 
             } catch (error) {
                 console.error('Error generating report:', error);
@@ -794,136 +801,6 @@
                     stack: error.stack
                 });
                 addMessage('error', `Sorry, I encountered an error generating the report: ${error.message}`);
-            }
-        }
-
-        function generateReportContent() {
-            const today = new Date();
-            const dateStr = today.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const timeStr = today.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            let reportHTML = `
-                <h2>ZenCalcs Calculation Report</h2>
-                <p><strong>Generated:</strong> ${dateStr} at ${timeStr}</p>
-                <hr style="margin: 20px 0; border: none; border-top: 2px solid #E5E7EB;">
-
-                <h3>Conversation Summary</h3>
-                <p>This report contains ${conversationHistory.length / 2} calculation exchanges between you and the AI Assistant.</p>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
-            `;
-
-            // Add each Q&A pair
-            for (let i = 0; i < conversationHistory.length; i += 2) {
-                const userMsg = conversationHistory[i];
-                const aiMsg = conversationHistory[i + 1];
-
-                if (userMsg && aiMsg) {
-                    const questionNum = (i / 2) + 1;
-
-                    reportHTML += `
-                        <div style="margin-bottom: 30px;">
-                            <h3 style="color: #2C5F6F; margin-bottom: 10px;">Question ${questionNum}</h3>
-                            <div style="background: #F8F9FA; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #6B7280;">
-                                <p style="margin: 0;"><strong>You asked:</strong></p>
-                                <p style="margin: 10px 0 0 0;">${escapeHtml(userMsg.content)}</p>
-                            </div>
-
-                            <div style="background: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 4px solid #2C5F6F;">
-                                <p style="margin: 0;"><strong>AI Assistant responded:</strong></p>
-                                <div style="margin: 10px 0 0 0;">${formatAnswerForReport(aiMsg.content)}</div>
-                            </div>
-                        </div>
-                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
-                    `;
-                }
-            }
-
-            reportHTML += `
-                <div style="margin-top: 30px; padding: 20px; background: #F8F9FA; border-radius: 8px; text-align: center;">
-                    <p style="margin: 0; color: #6B7280; font-size: 0.9em;">
-                        This report was automatically generated from your conversation with ZenCalcs AI Assistant.
-                    </p>
-                </div>
-            `;
-
-            return reportHTML;
-        }
-
-        function formatAnswerForReport(text) {
-            // Format the answer with proper HTML for PDF
-            let formatted = text
-                // Convert ## Headings
-                .replace(/^## (.+)$/gm, '<h4 style="color: #2C5F6F; font-size: 1.1em; margin: 15px 0 8px 0;">$1</h4>')
-                // Convert ### Subheadings
-                .replace(/^### (.+)$/gm, '<h5 style="color: #1E40AF; font-size: 1em; margin: 12px 0 6px 0;">$1</h5>')
-                // Convert **bold**
-                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2C5F6F;">$1</strong>')
-                // Convert bullet points
-                .replace(/^- (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">• $1</div>')
-                // Convert numbered lists
-                .replace(/^\d+\. (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">$1</div>')
-                // Convert line breaks
-                .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
-                .replace(/\n/g, '<br>');
-
-            return `<div>${formatted}</div>`;
-        }
-
-        function createPDF(reportContent) {
-            try {
-                console.log('Creating PDF with content length:', reportContent.length);
-
-                // Create temporary container
-                const pdfContainer = document.createElement('div');
-                pdfContainer.style.padding = '40px';
-                pdfContainer.style.fontFamily = 'Arial, sans-serif';
-                pdfContainer.style.fontSize = '12px';
-                pdfContainer.style.lineHeight = '1.6';
-                pdfContainer.style.color = '#2D3748';
-                pdfContainer.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
-                        <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
-                        <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Professional Calculator Suite</p>
-                    </div>
-                    ${reportContent}
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
-                        <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
-                    </div>
-                `;
-
-                console.log('PDF container created');
-
-                // PDF options
-                const opt = {
-                    margin: 0.5,
-                    filename: `ZenCalcs-Report-${new Date().toISOString().split('T')[0]}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true },
-                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-                };
-
-                console.log('Generating PDF with options:', opt);
-
-                // Generate and download
-                html2pdf().set(opt).from(pdfContainer).save()
-                    .then(() => {
-                        console.log('PDF generated and downloaded successfully');
-                    })
-                    .catch((error) => {
-                        console.error('Error during PDF generation:', error);
-                        throw error;
-                    });
-
-            } catch (error) {
-                console.error('Error in createPDF function:', error);
-                throw error;
             }
         }
 
@@ -955,5 +832,15 @@
             });
         });
     </script>
+
+    <!-- Report Generation Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Report Generation Modules -->
+    <script src="js/chart-builder.js"></script>
+    <script src="js/conversation-analyzer.js"></script>
+    <script src="js/report-generator.js"></script>
 </body>
 </html>
