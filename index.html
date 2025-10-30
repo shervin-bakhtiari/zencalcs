@@ -765,42 +765,24 @@
         }
 
         async function requestReportFromAI() {
-            console.log('Requesting report from AI...');
+            console.log('Generating report from conversation history...');
 
             // Show loading message
             addMessage('assistant', 'Generating your calculation report...');
 
             try {
-                const response = await fetch('/.netlify/functions/ai-chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: 'Please generate a comprehensive calculation report based on our conversation. Include: 1) A title "ZenCalcs Calculation Report", 2) Today\'s date, 3) Professional executive summary, 4) All inputs provided, 5) All calculation results with clear sections and headings, 6) Key insights and recommendations. Format with ## for main headings and ### for subheadings. Make it professional and suitable for PDF export.',
-                        conversationHistory: conversationHistory
-                    })
-                });
-
-                console.log('API response status:', response.status);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('API error response:', errorText);
-                    throw new Error(`API returned ${response.status}: ${errorText}`);
-                }
-
-                const data = await response.json();
-                console.log('Report data received:', data);
-
                 // Check if html2pdf is available
                 if (typeof html2pdf === 'undefined') {
                     throw new Error('html2pdf library is not loaded');
                 }
 
+                // Generate report content from conversation history
+                const reportContent = generateReportContent();
+                console.log('Report content generated from conversation history');
+
                 // Create PDF
                 console.log('Creating PDF...');
-                createPDF(data.response);
+                createPDF(reportContent);
 
                 // Show success message
                 addMessage('assistant', '📊 Your calculation report has been generated and downloaded as a PDF file.');
@@ -815,13 +797,88 @@
             }
         }
 
+        function generateReportContent() {
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const timeStr = today.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            let reportHTML = `
+                <h2>ZenCalcs Calculation Report</h2>
+                <p><strong>Generated:</strong> ${dateStr} at ${timeStr}</p>
+                <hr style="margin: 20px 0; border: none; border-top: 2px solid #E5E7EB;">
+
+                <h3>Conversation Summary</h3>
+                <p>This report contains ${conversationHistory.length / 2} calculation exchanges between you and the AI Assistant.</p>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
+            `;
+
+            // Add each Q&A pair
+            for (let i = 0; i < conversationHistory.length; i += 2) {
+                const userMsg = conversationHistory[i];
+                const aiMsg = conversationHistory[i + 1];
+
+                if (userMsg && aiMsg) {
+                    const questionNum = (i / 2) + 1;
+
+                    reportHTML += `
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #2C5F6F; margin-bottom: 10px;">Question ${questionNum}</h3>
+                            <div style="background: #F8F9FA; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #6B7280;">
+                                <p style="margin: 0;"><strong>You asked:</strong></p>
+                                <p style="margin: 10px 0 0 0;">${escapeHtml(userMsg.content)}</p>
+                            </div>
+
+                            <div style="background: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 4px solid #2C5F6F;">
+                                <p style="margin: 0;"><strong>AI Assistant responded:</strong></p>
+                                <div style="margin: 10px 0 0 0;">${formatAnswerForReport(aiMsg.content)}</div>
+                            </div>
+                        </div>
+                        <hr style="margin: 20px 0; border: none; border-top: 1px solid #E5E7EB;">
+                    `;
+                }
+            }
+
+            reportHTML += `
+                <div style="margin-top: 30px; padding: 20px; background: #F8F9FA; border-radius: 8px; text-align: center;">
+                    <p style="margin: 0; color: #6B7280; font-size: 0.9em;">
+                        This report was automatically generated from your conversation with ZenCalcs AI Assistant.
+                    </p>
+                </div>
+            `;
+
+            return reportHTML;
+        }
+
+        function formatAnswerForReport(text) {
+            // Format the answer with proper HTML for PDF
+            let formatted = text
+                // Convert ## Headings
+                .replace(/^## (.+)$/gm, '<h4 style="color: #2C5F6F; font-size: 1.1em; margin: 15px 0 8px 0;">$1</h4>')
+                // Convert ### Subheadings
+                .replace(/^### (.+)$/gm, '<h5 style="color: #1E40AF; font-size: 1em; margin: 12px 0 6px 0;">$1</h5>')
+                // Convert **bold**
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2C5F6F;">$1</strong>')
+                // Convert bullet points
+                .replace(/^- (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">• $1</div>')
+                // Convert numbered lists
+                .replace(/^\d+\. (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">$1</div>')
+                // Convert line breaks
+                .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
+                .replace(/\n/g, '<br>');
+
+            return `<div>${formatted}</div>`;
+        }
+
         function createPDF(reportContent) {
             try {
                 console.log('Creating PDF with content length:', reportContent.length);
-
-                // Convert markdown to formatted HTML
-                const formattedContent = formatReportForPDF(reportContent);
-                console.log('Content formatted for PDF');
 
                 // Create temporary container
                 const pdfContainer = document.createElement('div');
@@ -833,9 +890,9 @@
                 pdfContainer.innerHTML = `
                     <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2C5F6F; padding-bottom: 20px;">
                         <h1 style="color: #2C5F6F; font-size: 24px; margin: 0;">ZenCalcs</h1>
-                        <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Calculation Report</p>
+                        <p style="color: #1E40AF; font-size: 14px; margin: 5px 0;">Professional Calculator Suite</p>
                     </div>
-                    ${formattedContent}
+                    ${reportContent}
                     <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center; font-size: 10px; color: #6B7280;">
                         <p>Generated by ZenCalcs AI Assistant • https://zencalcs.com</p>
                     </div>
@@ -868,19 +925,6 @@
                 console.error('Error in createPDF function:', error);
                 throw error;
             }
-        }
-
-        function formatReportForPDF(text) {
-            let formatted = text
-                .replace(/^## (.+)$/gm, '<h2 style="color: #2C5F6F; font-size: 18px; margin: 20px 0 10px 0; border-bottom: 2px solid #E5E7EB; padding-bottom: 5px;">$1</h2>')
-                .replace(/^### (.+)$/gm, '<h3 style="color: #1E40AF; font-size: 14px; margin: 15px 0 8px 0; font-weight: 600;">$1</h3>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: #2C5F6F;">$1</strong>')
-                .replace(/^- (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">• $1</div>')
-                .replace(/^\d+\. (.+)$/gm, '<div style="margin: 5px 0 5px 20px;">$1</div>')
-                .replace(/\n\n/g, '</p><p style="margin: 10px 0;">')
-                .replace(/\n/g, '<br>');
-
-            return `<div style="line-height: 1.6;">${formatted}</div>`;
         }
 
         function clearChat() {
