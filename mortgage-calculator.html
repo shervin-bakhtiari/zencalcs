@@ -532,7 +532,7 @@
                         </div>
                         <p class="text-gray-600 mb-4 text-sm">Get personalized analysis based on your specific mortgage details:</p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div id="aiToolsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <button onclick="handleAITool('explain')"
                                 class="flex items-center gap-3 bg-white border-2 border-gray-200 hover:border-brand-500 hover:bg-brand-50 rounded-xl px-4 py-3 text-left font-semibold text-gray-700 hover:text-brand-700 transition transform hover:-translate-y-0.5">
                                 <img src="assets/icons/lightbulb.svg" alt="" class="icon text-brand-500">
@@ -1277,7 +1277,7 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
         }
 
         function updateScenarioComparisonButton() {
-            const toolsGrid = document.querySelector('.grid.grid-cols-2.gap-4');
+            const toolsGrid = document.getElementById('aiToolsGrid');
             const existingBtn = document.getElementById('scenarioComparisonBtn');
 
             // Remove existing button if present
@@ -1286,10 +1286,10 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             }
 
             // Add comparison button if we have 2 calculated scenarios
-            if (scenarios.length === 2 && scenarios[0].data && scenarios[1].data) {
+            if (toolsGrid && scenarios.length === 2 && scenarios[0].data && scenarios[1].data) {
                 const comparisonBtn = document.createElement('button');
                 comparisonBtn.id = 'scenarioComparisonBtn';
-                comparisonBtn.className = 'col-span-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl p-6 transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center gap-3';
+                comparisonBtn.className = 'col-span-1 sm:col-span-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl p-6 transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center gap-3';
                 comparisonBtn.onclick = () => handleScenarioComparison();
                 comparisonBtn.innerHTML = `
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1305,13 +1305,21 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             const responseArea = document.getElementById('aiResponseArea');
             responseArea.classList.remove('hidden');
 
-            if (scenarios.length < 2 || !scenarios[0].data || !scenarios[1].data) {
+            console.log('Scenario comparison requested');
+            console.log('Scenarios array:', scenarios);
+            console.log('Scenario 0 data:', scenarios[0]?.data);
+            console.log('Scenario 1 data:', scenarios[1]?.data);
+
+            if (scenarios.length < 2 || !scenarios[0]?.data || !scenarios[1]?.data) {
                 responseArea.innerHTML = '<h4 class="text-lg font-bold text-red-600">Please calculate both scenarios first</h4>';
                 return;
             }
 
             const s1 = scenarios[0];
             const s2 = scenarios[1];
+
+            console.log('Scenario 1:', s1.name, 'Monthly Payment:', s1.data?.monthlyPayment);
+            console.log('Scenario 2:', s2.name, 'Monthly Payment:', s2.data?.monthlyPayment);
 
             const comparisonPrompt = `Compare these two mortgage scenarios and provide a detailed analysis following ZenCalcs AI format with icon placeholders:
 
@@ -1356,9 +1364,17 @@ Structure your response with proper headings using ## and ###, use **bold** for 
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Scenario Comparison API Error:', errorData);
-                    throw new Error(errorData.error || 'API request failed');
+                    let errorMessage = `API request failed with status ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        console.error('Scenario Comparison API Error:', errorData);
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (e) {
+                        console.error('Could not parse error response:', e);
+                        const textError = await response.text();
+                        console.error('Error response text:', textError);
+                    }
+                    throw new Error(errorMessage);
                 }
 
                 const result = await response.json();
