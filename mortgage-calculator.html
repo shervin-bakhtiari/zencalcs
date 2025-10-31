@@ -713,6 +713,12 @@
             // Update chat widget context
             updateChatContext();
 
+            // Save AI insights HTML content for restoration when switching scenarios
+            const aiInsightsElement = document.getElementById('aiInsights');
+            if (aiInsightsElement) {
+                currentMortgageData.aiInsightsHTML = aiInsightsElement.innerHTML;
+            }
+
             // Save scenario
             saveCurrentScenario();
         }
@@ -1055,7 +1061,8 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
         // Scenario Management Functions
         function saveCurrentScenario() {
             // Get current tab name
-            const tabName = document.querySelector(`.scenario-tab[data-scenario="${currentScenarioIndex}"] .scenario-name`).textContent;
+            const tabElement = document.querySelector(`.scenario-tab[data-scenario="${currentScenarioIndex}"] .scenario-name`);
+            const tabName = tabElement ? tabElement.textContent : `Scenario ${currentScenarioIndex + 1}`;
 
             const scenario = {
                 name: tabName,
@@ -1067,10 +1074,16 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 timestamp: new Date().toLocaleString()
             };
 
-            if (scenarios.length === 0 || currentScenarioIndex === scenarios.length) {
+            // Update existing scenario or create new one
+            if (scenarios[currentScenarioIndex] !== undefined) {
+                // Update existing scenario
+                scenarios[currentScenarioIndex] = scenario;
+            } else if (scenarios.length === 0 || currentScenarioIndex === scenarios.length) {
+                // Create new scenario
                 scenarios.push(scenario);
                 currentScenarioIndex = scenarios.length - 1;
             } else {
+                // Fallback: just set at the current index
                 scenarios[currentScenarioIndex] = scenario;
             }
 
@@ -1084,14 +1097,24 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
         }
 
         function switchToScenario(index) {
-            // Save current scenario data before switching
-            if (scenarios[currentScenarioIndex]) {
+            // Don't switch if already on this scenario
+            if (currentScenarioIndex === parseInt(index)) {
+                return;
+            }
+
+            // Save current scenario data before switching (including calculation results)
+            if (scenarios[currentScenarioIndex] !== undefined) {
                 scenarios[currentScenarioIndex].homePrice = parseFloat(document.getElementById('homePrice').value);
                 scenarios[currentScenarioIndex].downPayment = parseFloat(document.getElementById('downPayment').value);
                 scenarios[currentScenarioIndex].interestRate = parseFloat(document.getElementById('interestRate').value);
                 scenarios[currentScenarioIndex].loanTerm = parseFloat(document.getElementById('loanTerm').value);
+                // IMPORTANT: Save the current calculation results
+                if (currentMortgageData) {
+                    scenarios[currentScenarioIndex].data = currentMortgageData;
+                }
             }
 
+            // Switch to new scenario
             currentScenarioIndex = parseInt(index);
             const scenario = scenarios[currentScenarioIndex];
 
@@ -1114,8 +1137,17 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             if (scenario.data) {
                 currentMortgageData = scenario.data;
                 displayResults(currentMortgageData);
+
+                // Restore AI insights if they were saved
+                if (scenario.data.aiInsightsHTML) {
+                    const aiInsightsElement = document.getElementById('aiInsights');
+                    if (aiInsightsElement) {
+                        aiInsightsElement.innerHTML = scenario.data.aiInsightsHTML;
+                    }
+                }
             } else {
                 // Show placeholder if not calculated yet
+                currentMortgageData = null;
                 document.getElementById('resultsContainer').innerHTML = `
                     <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
                         <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
