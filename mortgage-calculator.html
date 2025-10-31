@@ -217,6 +217,42 @@
         .expand-icon {
             transition: transform 0.3s ease;
         }
+
+        /* Scenario Tabs Styling */
+        .scenario-tab {
+            transition: all 0.2s ease;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 3px solid transparent;
+        }
+
+        .scenario-tab:hover {
+            background: #e5e7eb;
+        }
+
+        .scenario-tab.active {
+            background: #3b82f6;
+            color: white;
+            border-bottom-color: #1e40af;
+        }
+
+        .scenario-tab input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: inherit;
+            font-weight: inherit;
+            width: 100px;
+            padding: 0;
+        }
+
+        .scenario-tab input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-800">
@@ -312,21 +348,15 @@
                     <img src="assets/icons/home.svg" alt="" class="icon text-brand-500">
                     <h2 class="text-2xl font-bold text-gray-900">Mortgage Details</h2>
                 </div>
-                <p class="text-gray-600 mb-6 text-sm">Enter your loan information to calculate monthly payments and see AI-powered insights.</p>
 
-                <!-- Scenario Selector (appears after first calculation) -->
-                <div id="scenarioSelector" class="hidden mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
-                    <label class="block text-sm font-bold text-gray-800 mb-2">Active Scenario:</label>
-                    <select id="scenarioDropdown" onchange="switchScenario(this.value)"
-                        class="w-full px-4 py-2.5 border-2 border-blue-300 rounded-lg font-semibold text-gray-800 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none mb-3">
-                    </select>
-                    <button onclick="createNewScenario()" class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Create New Scenario
-                    </button>
+                <!-- Scenario Tabs -->
+                <div id="scenarioTabs" class="flex gap-2 mb-4 border-b border-gray-200 pb-0">
+                    <div class="scenario-tab active flex items-center gap-2 px-4 py-2 rounded-t-lg cursor-pointer bg-brand-500 text-white" data-scenario="0" onclick="switchToScenario(0)">
+                        <span class="scenario-name" ondblclick="renameScenario(event, 0)">Scenario 1</span>
+                    </div>
                 </div>
+
+                <p class="text-gray-600 mb-6 text-sm">Enter your loan information to calculate monthly payments and see AI-powered insights.</p>
 
                 <!-- Input Fields -->
                 <div class="space-y-5">
@@ -357,6 +387,14 @@
                     <button onclick="calculateMortgage()"
                         class="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white py-4 rounded-xl text-lg font-bold transition transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl mt-6">
                         Calculate Mortgage
+                    </button>
+
+                    <!-- Create New Scenario Button -->
+                    <button id="createScenarioBtn" onclick="createNewScenario()" class="hidden w-full mt-3 px-4 py-3 bg-white hover:bg-gray-50 text-brand-600 border-2 border-brand-500 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Create New Scenario
                     </button>
                 </div>
             </div>
@@ -965,11 +1003,6 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
 
                 const result = await response.json();
 
-                // DEBUGGING: Log the full result
-                console.log('AI Tool Result:', result);
-                console.log('Response text:', result.response);
-                console.log('Response length:', result.response ? result.response.length : 'undefined');
-
                 // Check if we have a response
                 if (!result.response) {
                     console.error('No response in result:', result);
@@ -979,15 +1012,9 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 // Create container and render
                 responseArea.innerHTML = `<h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4><div id="aiToolResponse"></div>`;
 
-                // DEBUGGING: Check if element exists
-                console.log('aiToolResponse element:', document.getElementById('aiToolResponse'));
-                console.log('About to call renderCollapsibleAIResponse with:', result.response.substring(0, 100));
-
                 // Use setTimeout to ensure DOM is ready
                 setTimeout(() => {
-                    console.log('Inside setTimeout, calling renderCollapsibleAIResponse');
                     renderCollapsibleAIResponse(result.response, 'aiToolResponse');
-                    console.log('After renderCollapsibleAIResponse, element content:', document.getElementById('aiToolResponse').innerHTML.substring(0, 200));
                 }, 0);
             } catch (error) {
                 console.error('AI Tool error:', error);
@@ -1027,8 +1054,11 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
 
         // Scenario Management Functions
         function saveCurrentScenario() {
+            // Get current tab name
+            const tabName = document.querySelector(`.scenario-tab[data-scenario="${currentScenarioIndex}"] .scenario-name`).textContent;
+
             const scenario = {
-                name: `Scenario ${scenarios.length + 1}`,
+                name: tabName,
                 homePrice: parseFloat(document.getElementById('homePrice').value),
                 downPayment: parseFloat(document.getElementById('downPayment').value),
                 interestRate: parseFloat(document.getElementById('interestRate').value),
@@ -1044,26 +1074,35 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 scenarios[currentScenarioIndex] = scenario;
             }
 
-            updateScenarioDropdown();
-            showScenarioSelector();
+            // Show "Create New Scenario" button after first calculation (max 2 scenarios)
+            if (scenarios.length === 1) {
+                document.getElementById('createScenarioBtn').classList.remove('hidden');
+            }
+
+            // Show scenario comparison button if 2 scenarios exist
+            updateScenarioComparisonButton();
         }
 
-        function showScenarioSelector() {
-            document.getElementById('scenarioSelector').classList.remove('hidden');
-        }
+        function switchToScenario(index) {
+            // Save current scenario data before switching
+            if (scenarios[currentScenarioIndex]) {
+                scenarios[currentScenarioIndex].homePrice = parseFloat(document.getElementById('homePrice').value);
+                scenarios[currentScenarioIndex].downPayment = parseFloat(document.getElementById('downPayment').value);
+                scenarios[currentScenarioIndex].interestRate = parseFloat(document.getElementById('interestRate').value);
+                scenarios[currentScenarioIndex].loanTerm = parseFloat(document.getElementById('loanTerm').value);
+            }
 
-        function updateScenarioDropdown() {
-            const dropdown = document.getElementById('scenarioDropdown');
-            dropdown.innerHTML = scenarios.map((scenario, index) => `
-                <option value="${index}" ${index === currentScenarioIndex ? 'selected' : ''}>
-                    ${scenario.name} - ${formatCurrency(scenario.homePrice)} @ ${scenario.interestRate}%
-                </option>
-            `).join('');
-        }
-
-        function switchScenario(index) {
             currentScenarioIndex = parseInt(index);
             const scenario = scenarios[currentScenarioIndex];
+
+            // Update tabs
+            document.querySelectorAll('.scenario-tab').forEach((tab, idx) => {
+                if (idx === currentScenarioIndex) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
 
             // Update input fields
             document.getElementById('homePrice').value = scenario.homePrice;
@@ -1071,27 +1110,241 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             document.getElementById('interestRate').value = scenario.interestRate;
             document.getElementById('loanTerm').value = scenario.loanTerm;
 
-            // Update results
-            currentMortgageData = scenario.data;
-            displayResults(currentMortgageData);
+            // Update results if this scenario has been calculated
+            if (scenario.data) {
+                currentMortgageData = scenario.data;
+                displayResults(currentMortgageData);
+            } else {
+                // Show placeholder if not calculated yet
+                document.getElementById('resultsContainer').innerHTML = `
+                    <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
+                        <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
+                            <div class="flex items-center gap-3 mb-2">
+                                <img src="assets/icons/calculator.svg" alt="" class="icon text-white">
+                                <h3 class="text-xl font-bold">Calculate This Scenario</h3>
+                            </div>
+                            <p class="text-brand-50 text-sm">Adjust the values and click Calculate Mortgage to see results</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renameScenario(event, index) {
+            event.stopPropagation();
+            const nameSpan = event.target;
+            const currentName = nameSpan.textContent;
+
+            // Create input for editing
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentName;
+            input.className = 'scenario-name-input';
+
+            // Replace span with input
+            nameSpan.replaceWith(input);
+            input.focus();
+            input.select();
+
+            // Save on blur or enter
+            const saveName = () => {
+                const newName = input.value.trim() || currentName;
+                const newSpan = document.createElement('span');
+                newSpan.className = 'scenario-name';
+                newSpan.textContent = newName;
+                newSpan.ondblclick = (e) => renameScenario(e, index);
+                input.replaceWith(newSpan);
+
+                // Update scenario data
+                if (scenarios[index]) {
+                    scenarios[index].name = newName;
+                }
+            };
+
+            input.addEventListener('blur', saveName);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveName();
+                }
+                if (e.key === 'Escape') {
+                    const newSpan = document.createElement('span');
+                    newSpan.className = 'scenario-name';
+                    newSpan.textContent = currentName;
+                    newSpan.ondblclick = (ev) => renameScenario(ev, index);
+                    input.replaceWith(newSpan);
+                }
+            });
         }
 
         function createNewScenario() {
-            // Create a new scenario by clearing inputs
+            if (scenarios.length >= 2) {
+                alert('Maximum 2 scenarios allowed');
+                return;
+            }
+
+            // Create new scenario index
             currentScenarioIndex = scenarios.length;
 
-            // Keep some sensible defaults
+            // Create new tab
+            const tabsContainer = document.getElementById('scenarioTabs');
+            const newTab = document.createElement('div');
+            newTab.className = 'scenario-tab active flex items-center gap-2 px-4 py-2 rounded-t-lg cursor-pointer bg-brand-500 text-white';
+            newTab.setAttribute('data-scenario', currentScenarioIndex);
+            newTab.onclick = () => switchToScenario(currentScenarioIndex);
+            newTab.innerHTML = `<span class="scenario-name" ondblclick="renameScenario(event, ${currentScenarioIndex})">Scenario ${currentScenarioIndex + 1}</span>`;
+
+            // Deactivate other tabs
+            document.querySelectorAll('.scenario-tab').forEach(tab => tab.classList.remove('active'));
+
+            // Add new tab
+            tabsContainer.appendChild(newTab);
+
+            // Initialize new scenario with last scenario's values
             const lastScenario = scenarios[scenarios.length - 1];
             document.getElementById('homePrice').value = lastScenario.homePrice;
             document.getElementById('downPayment').value = lastScenario.downPayment;
             document.getElementById('interestRate').value = lastScenario.interestRate;
             document.getElementById('loanTerm').value = lastScenario.loanTerm;
 
-            // Scroll to top to see inputs
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Create placeholder scenario object
+            scenarios.push({
+                name: `Scenario ${currentScenarioIndex + 1}`,
+                homePrice: lastScenario.homePrice,
+                downPayment: lastScenario.downPayment,
+                interestRate: lastScenario.interestRate,
+                loanTerm: lastScenario.loanTerm,
+                data: null
+            });
 
-            // Show alert
-            alert('Create your new scenario by adjusting the values above and clicking "Calculate Mortgage"');
+            // Hide create button if we now have 2 scenarios
+            if (scenarios.length >= 2) {
+                document.getElementById('createScenarioBtn').classList.add('hidden');
+            }
+
+            // Show placeholder
+            document.getElementById('resultsContainer').innerHTML = `
+                <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
+                    <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
+                        <div class="flex items-center gap-3 mb-2">
+                            <img src="assets/icons/calculator.svg" alt="" class="icon text-white">
+                            <h3 class="text-xl font-bold">Calculate This Scenario</h3>
+                        </div>
+                        <p class="text-brand-50 text-sm">Adjust the values and click Calculate Mortgage to see results</p>
+                    </div>
+                </div>
+            `;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateScenarioComparisonButton() {
+            const toolsGrid = document.querySelector('.grid.grid-cols-2.gap-4');
+            const existingBtn = document.getElementById('scenarioComparisonBtn');
+
+            // Remove existing button if present
+            if (existingBtn) {
+                existingBtn.remove();
+            }
+
+            // Add comparison button if we have 2 calculated scenarios
+            if (scenarios.length === 2 && scenarios[0].data && scenarios[1].data) {
+                const comparisonBtn = document.createElement('button');
+                comparisonBtn.id = 'scenarioComparisonBtn';
+                comparisonBtn.className = 'col-span-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white rounded-xl p-6 transition transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center gap-3';
+                comparisonBtn.onclick = () => handleScenarioComparison();
+                comparisonBtn.innerHTML = `
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span class="text-lg font-bold">Compare Scenarios</span>
+                `;
+                toolsGrid.appendChild(comparisonBtn);
+            }
+        }
+
+        async function handleScenarioComparison() {
+            const responseArea = document.getElementById('aiResponseArea');
+            responseArea.classList.remove('hidden');
+
+            if (scenarios.length < 2 || !scenarios[0].data || !scenarios[1].data) {
+                responseArea.innerHTML = '<h4 class="text-lg font-bold text-red-600">Please calculate both scenarios first</h4>';
+                return;
+            }
+
+            const s1 = scenarios[0];
+            const s2 = scenarios[1];
+
+            const comparisonPrompt = `Compare these two mortgage scenarios and provide a detailed analysis following ZenCalcs AI format with icon placeholders:
+
+**${s1.name}:**
+- Home Price: ${formatCurrency(s1.homePrice)}
+- Down Payment: ${formatCurrency(s1.downPayment)} (${((s1.downPayment/s1.homePrice)*100).toFixed(1)}%)
+- Interest Rate: ${s1.interestRate}%
+- Loan Term: ${s1.loanTerm} years
+- Loan Amount: ${formatCurrency(s1.data.loanAmount)}
+- Monthly Payment: ${formatCurrency(s1.data.monthlyPayment)}
+- Total Interest: ${formatCurrency(s1.data.totalInterest)}
+- Total Paid: ${formatCurrency(s1.data.totalPaid)}
+
+**${s2.name}:**
+- Home Price: ${formatCurrency(s2.homePrice)}
+- Down Payment: ${formatCurrency(s2.downPayment)} (${((s2.downPayment/s2.homePrice)*100).toFixed(1)}%)
+- Interest Rate: ${s2.interestRate}%
+- Loan Term: ${s2.loanTerm} years
+- Loan Amount: ${formatCurrency(s2.data.loanAmount)}
+- Monthly Payment: ${formatCurrency(s2.data.monthlyPayment)}
+- Total Interest: ${formatCurrency(s2.data.totalInterest)}
+- Total Paid: ${formatCurrency(s2.data.totalPaid)}
+
+Provide a comprehensive comparison including:
+1. Key differences in monthly payments, total interest, and overall cost
+2. Which scenario is better for short-term affordability vs long-term savings
+3. Break-even analysis if applicable
+4. Recommendation based on different financial situations
+5. Use a comparison table format where helpful
+
+Structure your response with proper headings using ## and ###, use **bold** for numbers, and include icon placeholders like [icon:home], [icon:wallet], [icon:chart], [icon:target].`;
+
+            responseArea.innerHTML = '<div class="flex items-center justify-center py-4"><div class="spinner"></div></div>';
+
+            try {
+                const response = await fetch('/.netlify/functions/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: comparisonPrompt
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Scenario Comparison API Error:', errorData);
+                    throw new Error(errorData.error || 'API request failed');
+                }
+
+                const result = await response.json();
+
+                if (!result.response) {
+                    console.error('No response in scenario comparison result:', result);
+                    throw new Error('No response from AI');
+                }
+
+                // Create container and render
+                responseArea.innerHTML = `<h4 class="text-lg font-bold text-purple-700 mb-3">Scenario Comparison: ${s1.name} vs ${s2.name}</h4><div id="aiToolResponse"></div>`;
+
+                // Use setTimeout to ensure DOM is ready
+                setTimeout(() => {
+                    renderCollapsibleAIResponse(result.response, 'aiToolResponse');
+                }, 0);
+            } catch (error) {
+                console.error('Scenario Comparison error:', error);
+                responseArea.innerHTML = `
+                    <h4 class="text-lg font-bold text-red-600">Analysis temporarily unavailable</h4>
+                    <p class="text-gray-600 mt-2">Please try again in a moment.</p>
+                    <p class="text-xs text-gray-500 mt-2">Error: ${error.message}</p>
+                `;
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
