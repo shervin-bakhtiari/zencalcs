@@ -965,6 +965,11 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
 
                 const result = await response.json();
 
+                // DEBUGGING: Log the full result
+                console.log('AI Tool Result:', result);
+                console.log('Response text:', result.response);
+                console.log('Response length:', result.response ? result.response.length : 'undefined');
+
                 // Check if we have a response
                 if (!result.response) {
                     console.error('No response in result:', result);
@@ -974,9 +979,15 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 // Create container and render
                 responseArea.innerHTML = `<h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4><div id="aiToolResponse"></div>`;
 
+                // DEBUGGING: Check if element exists
+                console.log('aiToolResponse element:', document.getElementById('aiToolResponse'));
+                console.log('About to call renderCollapsibleAIResponse with:', result.response.substring(0, 100));
+
                 // Use setTimeout to ensure DOM is ready
                 setTimeout(() => {
+                    console.log('Inside setTimeout, calling renderCollapsibleAIResponse');
                     renderCollapsibleAIResponse(result.response, 'aiToolResponse');
+                    console.log('After renderCollapsibleAIResponse, element content:', document.getElementById('aiToolResponse').innerHTML.substring(0, 200));
                 }, 0);
             } catch (error) {
                 console.error('AI Tool error:', error);

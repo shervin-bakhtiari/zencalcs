@@ -139,22 +139,35 @@ function renderAIResponse(markdownText, targetElementId) {
  * @param {string} targetElementId - ID of the element to render into
  */
 function renderCollapsibleAIResponse(markdownText, targetElementId) {
+    console.log('renderCollapsibleAIResponse called with:', {
+        targetElementId,
+        markdownLength: markdownText ? markdownText.length : 'undefined',
+        markdownPreview: markdownText ? markdownText.substring(0, 100) : 'undefined'
+    });
+
     const element = document.getElementById(targetElementId);
     if (!element) {
         console.error(`Element with ID "${targetElementId}" not found`);
         return;
     }
 
+    console.log('Element found:', element);
+
     // Render full markdown first
     let html;
     if (typeof marked !== 'undefined') {
+        console.log('Using marked.js to parse markdown');
         html = marked.parse(markdownText);
     } else {
+        console.log('Using simple markdown renderer');
         html = simpleMarkdownRender(markdownText);
     }
 
+    console.log('HTML after markdown parsing:', html.substring(0, 200));
+
     // Replace icon placeholders
     html = replaceIconPlaceholders(html);
+    console.log('HTML after icon replacement:', html.substring(0, 200));
 
     // Create a temporary div to parse the HTML
     const tempDiv = document.createElement('div');
@@ -191,8 +204,13 @@ function renderCollapsibleAIResponse(markdownText, targetElementId) {
     }
 
     // Build collapsible HTML
+    console.log('Summary content length:', summaryContent.length);
+    console.log('Expanded content length:', expandedContent.length);
+    console.log('Has expanded content:', !!expandedContent);
+
     if (expandedContent) {
         const uniqueId = targetElementId + '-expanded';
+        console.log('Building collapsible HTML with uniqueId:', uniqueId);
         element.innerHTML = `
             <div class="ai-summary">${summaryContent}</div>
             <div id="${uniqueId}" class="ai-expanded hidden">${expandedContent}</div>
@@ -204,9 +222,11 @@ function renderCollapsibleAIResponse(markdownText, targetElementId) {
             </button>
         `;
     } else {
+        console.log('No expanded content, rendering full HTML');
         element.innerHTML = html;
     }
 
+    console.log('Final element innerHTML length:', element.innerHTML.length);
     element.classList.add('ai-results');
 }
 
