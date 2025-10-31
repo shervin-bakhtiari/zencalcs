@@ -1321,36 +1321,24 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             console.log('Scenario 1:', s1.name, 'Monthly Payment:', s1.data?.monthlyPayment);
             console.log('Scenario 2:', s2.name, 'Monthly Payment:', s2.data?.monthlyPayment);
 
-            const comparisonPrompt = `Compare these two mortgage scenarios and provide a detailed analysis following ZenCalcs AI format with icon placeholders:
+            const comparisonPrompt = `Compare these two mortgages. Keep response under 1500 words and be direct.
 
-**${s1.name}:**
-- Home Price: ${formatCurrency(s1.homePrice)}
-- Down Payment: ${formatCurrency(s1.downPayment)} (${((s1.downPayment/s1.homePrice)*100).toFixed(1)}%)
-- Interest Rate: ${s1.interestRate}%
-- Loan Term: ${s1.loanTerm} years
-- Loan Amount: ${formatCurrency(s1.data.loanAmount)}
-- Monthly Payment: ${formatCurrency(s1.data.monthlyPayment)}
-- Total Interest: ${formatCurrency(s1.data.totalInterest)}
-- Total Paid: ${formatCurrency(s1.data.totalPaid)}
+**${s1.name}:** ${formatCurrency(s1.homePrice)} home, ${formatCurrency(s1.downPayment)} down, ${s1.interestRate}% rate, ${s1.loanTerm} years
+→ Monthly: ${formatCurrency(s1.data.monthlyPayment)} | Total Interest: ${formatCurrency(s1.data.totalInterest)} | Total Paid: ${formatCurrency(s1.data.totalPaid)}
 
-**${s2.name}:**
-- Home Price: ${formatCurrency(s2.homePrice)}
-- Down Payment: ${formatCurrency(s2.downPayment)} (${((s2.downPayment/s2.homePrice)*100).toFixed(1)}%)
-- Interest Rate: ${s2.interestRate}%
-- Loan Term: ${s2.loanTerm} years
-- Loan Amount: ${formatCurrency(s2.data.loanAmount)}
-- Monthly Payment: ${formatCurrency(s2.data.monthlyPayment)}
-- Total Interest: ${formatCurrency(s2.data.totalInterest)}
-- Total Paid: ${formatCurrency(s2.data.totalPaid)}
+**${s2.name}:** ${formatCurrency(s2.homePrice)} home, ${formatCurrency(s2.downPayment)} down, ${s2.interestRate}% rate, ${s2.loanTerm} years
+→ Monthly: ${formatCurrency(s2.data.monthlyPayment)} | Total Interest: ${formatCurrency(s2.data.totalInterest)} | Total Paid: ${formatCurrency(s2.data.totalPaid)}
 
-Provide a comprehensive comparison including:
-1. Key differences in monthly payments, total interest, and overall cost
-2. Which scenario is better for short-term affordability vs long-term savings
-3. Break-even analysis if applicable
-4. Recommendation based on different financial situations
-5. Use a comparison table format where helpful
+Create a focused comparison with:
+## [icon:chart] Key Differences
+- Monthly payment difference and impact
+- Total interest savings/cost difference
+- Overall cost comparison
 
-Structure your response with proper headings using ## and ###, use **bold** for numbers, and include icon placeholders like [icon:home], [icon:wallet], [icon:chart], [icon:target].`;
+## [icon:target] Recommendation
+Which scenario is better and why (2-3 key points)
+
+Use **bold** for numbers, icon placeholders [icon:name], and keep it concise.`;
 
             responseArea.innerHTML = '<div class="flex items-center justify-center py-4"><div class="spinner"></div></div>';
 
