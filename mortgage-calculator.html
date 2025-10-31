@@ -197,6 +197,26 @@
                 font-size: 1.05rem;
             }
         }
+
+        /* AI Collapsible Animation */
+        .ai-fade-in {
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-800">
@@ -285,14 +305,28 @@
         </div>
 
         <!-- Two-Column Grid Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-start">
             <!-- LEFT PANEL: Input Form -->
-            <div class="bg-white rounded-2xl shadow-lg p-8 h-fit lg:sticky lg:top-24">
-                <div class="flex items-center gap-3 mb-6">
+            <div class="bg-white rounded-2xl shadow-lg p-8 lg:sticky lg:top-24" style="min-height: 650px;">
+                <div class="flex items-center gap-3 mb-4">
                     <img src="assets/icons/home.svg" alt="" class="icon text-brand-500">
                     <h2 class="text-2xl font-bold text-gray-900">Mortgage Details</h2>
                 </div>
-                <p class="text-gray-600 mb-8">Enter your loan information to calculate monthly payments and see AI-powered insights.</p>
+                <p class="text-gray-600 mb-6 text-sm">Enter your loan information to calculate monthly payments and see AI-powered insights.</p>
+
+                <!-- Scenario Selector (appears after first calculation) -->
+                <div id="scenarioSelector" class="hidden mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                    <label class="block text-sm font-bold text-gray-800 mb-2">Active Scenario:</label>
+                    <select id="scenarioDropdown" onchange="switchScenario(this.value)"
+                        class="w-full px-4 py-2.5 border-2 border-blue-300 rounded-lg font-semibold text-gray-800 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none mb-3">
+                    </select>
+                    <button onclick="createNewScenario()" class="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Create New Scenario
+                    </button>
+                </div>
 
                 <!-- Input Fields -->
                 <div class="space-y-5">
@@ -328,36 +362,81 @@
             </div>
 
             <!-- RIGHT PANEL: Results & AI Insights -->
-            <div id="resultsContainer" class="min-h-[600px]">
+            <div id="resultsContainer">
                 <!-- Placeholder State (Before Calculation) -->
-                <div id="placeholderState" class="bg-gray-50 rounded-2xl shadow-lg p-10 text-center min-h-[600px] flex flex-col items-center justify-center">
-                    <img src="assets/icons/calculator.svg" alt="" class="icon-lg text-gray-400 mb-6 opacity-70">
+                <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
+                    <!-- Header Section -->
+                    <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
+                        <div class="flex items-center gap-3 mb-2">
+                            <img src="assets/icons/calculator.svg" alt="" class="icon text-white">
+                            <h3 class="text-xl font-bold">Your Results Will Appear Here</h3>
+                        </div>
+                        <p class="text-brand-50 text-sm">Fill out the mortgage details on the left and click Calculate</p>
+                    </div>
 
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Ready when you are!</h3>
-                    <p class="text-gray-600 text-base leading-relaxed mb-8 max-w-md">
-                        Enter your mortgage details on the left to see comprehensive analysis with charts, payment breakdown, and AI-powered insights instantly.
-                    </p>
+                    <!-- Preview Content -->
+                    <div class="p-8 space-y-6">
+                        <!-- What You'll Get -->
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <img src="assets/icons/chart.svg" alt="" class="w-5 h-5 text-brand-500">
+                                What You'll Get:
+                            </h4>
+                            <div class="space-y-3">
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-2 h-2 bg-brand-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">Monthly Payment Breakdown</p>
+                                        <p class="text-sm text-gray-600">See exactly how much you'll pay monthly</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-2 h-2 bg-brand-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">AI-Powered Insights</p>
+                                        <p class="text-sm text-gray-600">Understand what your numbers mean</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-2 h-2 bg-brand-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">Interactive Charts</p>
+                                        <p class="text-sm text-gray-600">Visualize your payment timeline</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-2 h-2 bg-brand-500 rounded-full mt-2"></div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">Optimization Strategies</p>
+                                        <p class="text-sm text-gray-600">Ways to save money on your mortgage</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- AI Preview Card -->
-                    <div class="bg-white rounded-xl p-6 border-2 border-brand-100 max-w-md">
-                        <div class="flex items-start gap-3 mb-3">
-                            <img src="assets/icons/sparkles.svg" alt="" class="icon text-brand-500 flex-shrink-0 mt-1">
-                            <div class="text-left">
-                                <h4 class="font-bold text-gray-800 mb-2">ZenCalcs AI will help you:</h4>
-                                <ul class="text-sm text-gray-600 space-y-1.5">
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-brand-500 font-bold">•</span>
-                                        <span>Explain what affects your results</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-brand-500 font-bold">•</span>
-                                        <span>Compare different scenarios</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <span class="text-brand-500 font-bold">•</span>
-                                        <span>Provide personalized recommendations</span>
-                                    </li>
-                                </ul>
+                        <!-- AI Features -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <img src="assets/icons/sparkles.svg" alt="" class="w-5 h-5 text-brand-500">
+                                ZenCalcs AI Features:
+                            </h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="text-center p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                    <img src="assets/icons/lightbulb.svg" alt="" class="w-8 h-8 text-brand-500 mx-auto mb-2">
+                                    <p class="text-sm font-semibold text-gray-800">Explain Results</p>
+                                </div>
+                                <div class="text-center p-4 bg-green-50 rounded-lg border border-green-100">
+                                    <img src="assets/icons/sliders.svg" alt="" class="w-8 h-8 text-brand-500 mx-auto mb-2">
+                                    <p class="text-sm font-semibold text-gray-800">Optimize Loan</p>
+                                </div>
+                                <div class="text-center p-4 bg-purple-50 rounded-lg border border-purple-100">
+                                    <img src="assets/icons/compare.svg" alt="" class="w-8 h-8 text-brand-500 mx-auto mb-2">
+                                    <p class="text-sm font-semibold text-gray-800">Compare Terms</p>
+                                </div>
+                                <div class="text-center p-4 bg-orange-50 rounded-lg border border-orange-100">
+                                    <img src="assets/icons/home.svg" alt="" class="w-8 h-8 text-brand-500 mx-auto mb-2">
+                                    <p class="text-sm font-semibold text-gray-800">Buy vs Rent</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -476,6 +555,8 @@
     <script>
         let chartInstance = null;
         let currentMortgageData = null;
+        let scenarios = [];
+        let currentScenarioIndex = 0;
 
         function formatCurrency(value) {
             return new Intl.NumberFormat('en-US', {
@@ -593,6 +674,9 @@
 
             // Update chat widget context
             updateChatContext();
+
+            // Save scenario
+            saveCurrentScenario();
         }
 
         function displayResults(data) {
@@ -761,7 +845,7 @@ Generate structured mortgage insights following ZenCalcs AI format with icon pla
                 });
 
                 const result = await response.json();
-                renderAIResponse(result.response, 'aiInsights');
+                renderCollapsibleAIResponse(result.response, 'aiInsights');
             } catch (error) {
                 console.error('AI Insights error:', error);
                 insightsDiv.innerHTML = `<p>Your monthly payment of ${formatCurrency(data.monthlyPayment)} includes both principal and interest. Over ${data.loanTerm} years, you'll pay ${formatCurrency(data.totalInterest)} in interest (${((data.totalInterest/data.loanAmount)*100).toFixed(0)}% of the loan amount).</p><p class="mt-4">Consider increasing your down payment or choosing a shorter term to reduce total interest costs.</p>`;
@@ -862,7 +946,7 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
 
                 const result = await response.json();
                 responseArea.innerHTML = `<h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4><div id="aiToolResponse"></div>`;
-                renderAIResponse(result.response, 'aiToolResponse');
+                renderCollapsibleAIResponse(result.response, 'aiToolResponse');
             } catch (error) {
                 console.error('AI Tool error:', error);
                 responseArea.innerHTML = '<h4 class="text-lg font-bold text-red-600">Analysis temporarily unavailable</h4><p class="text-gray-600 mt-2">Please try again in a moment.</p>';
@@ -893,6 +977,75 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                     ]
                 });
             }
+        }
+
+        // Scenario Management Functions
+        function saveCurrentScenario() {
+            const scenario = {
+                name: `Scenario ${scenarios.length + 1}`,
+                homePrice: parseFloat(document.getElementById('homePrice').value),
+                downPayment: parseFloat(document.getElementById('downPayment').value),
+                interestRate: parseFloat(document.getElementById('interestRate').value),
+                loanTerm: parseFloat(document.getElementById('loanTerm').value),
+                data: currentMortgageData,
+                timestamp: new Date().toLocaleString()
+            };
+
+            if (scenarios.length === 0 || currentScenarioIndex === scenarios.length) {
+                scenarios.push(scenario);
+                currentScenarioIndex = scenarios.length - 1;
+            } else {
+                scenarios[currentScenarioIndex] = scenario;
+            }
+
+            updateScenarioDropdown();
+            showScenarioSelector();
+        }
+
+        function showScenarioSelector() {
+            document.getElementById('scenarioSelector').classList.remove('hidden');
+        }
+
+        function updateScenarioDropdown() {
+            const dropdown = document.getElementById('scenarioDropdown');
+            dropdown.innerHTML = scenarios.map((scenario, index) => `
+                <option value="${index}" ${index === currentScenarioIndex ? 'selected' : ''}>
+                    ${scenario.name} - ${formatCurrency(scenario.homePrice)} @ ${scenario.interestRate}%
+                </option>
+            `).join('');
+        }
+
+        function switchScenario(index) {
+            currentScenarioIndex = parseInt(index);
+            const scenario = scenarios[currentScenarioIndex];
+
+            // Update input fields
+            document.getElementById('homePrice').value = scenario.homePrice;
+            document.getElementById('downPayment').value = scenario.downPayment;
+            document.getElementById('interestRate').value = scenario.interestRate;
+            document.getElementById('loanTerm').value = scenario.loanTerm;
+
+            // Update results
+            currentMortgageData = scenario.data;
+            displayResults(currentMortgageData);
+        }
+
+        function createNewScenario() {
+            // Create a new scenario by clearing inputs
+            currentScenarioIndex = scenarios.length;
+
+            // Keep some sensible defaults
+            const lastScenario = scenarios[scenarios.length - 1];
+            document.getElementById('homePrice').value = lastScenario.homePrice;
+            document.getElementById('downPayment').value = lastScenario.downPayment;
+            document.getElementById('interestRate').value = lastScenario.interestRate;
+            document.getElementById('loanTerm').value = lastScenario.loanTerm;
+
+            // Scroll to top to see inputs
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Show alert
+            alert('Create your new scenario by adjusting the values above and clicking "Calculate Mortgage"');
         }
 
         window.addEventListener('DOMContentLoaded', () => {

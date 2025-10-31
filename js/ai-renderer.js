@@ -114,24 +114,125 @@ function renderAIResponse(markdownText, targetElementId) {
         return;
     }
 
-    // Replace icon placeholders first
-    const textWithIcons = replaceIconPlaceholders(markdownText);
-
-    // Render markdown
+    // Render markdown FIRST (without icon replacement)
     let html;
     if (typeof marked !== 'undefined') {
         // Use marked.js if available
-        html = marked.parse(textWithIcons);
+        html = marked.parse(markdownText);
     } else {
         // Use simple renderer as fallback
-        html = simpleMarkdownRender(textWithIcons);
+        html = simpleMarkdownRender(markdownText);
     }
+
+    // THEN replace icon placeholders in the HTML
+    html = replaceIconPlaceholders(html);
 
     // Set the HTML
     element.innerHTML = html;
     element.classList.add('ai-results');
 }
 
+/**
+ * Render AI response with collapsible "Show More" functionality
+ * Extracts first 2-3 paragraphs as summary, rest as expandable content
+ * @param {string} markdownText - The markdown text from Claude
+ * @param {string} targetElementId - ID of the element to render into
+ */
+function renderCollapsibleAIResponse(markdownText, targetElementId) {
+    const element = document.getElementById(targetElementId);
+    if (!element) {
+        console.error(`Element with ID "${targetElementId}" not found`);
+        return;
+    }
+
+    // Render full markdown first
+    let html;
+    if (typeof marked !== 'undefined') {
+        html = marked.parse(markdownText);
+    } else {
+        html = simpleMarkdownRender(markdownText);
+    }
+
+    // Replace icon placeholders
+    html = replaceIconPlaceholders(html);
+
+    // Create a temporary div to parse the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Find the first h2 (if it exists) and content after it
+    const firstH2 = tempDiv.querySelector('h2');
+    let summaryContent = '';
+    let expandedContent = '';
+
+    if (firstH2) {
+        // Get all elements
+        const allElements = Array.from(tempDiv.children);
+        const h2Index = allElements.indexOf(firstH2);
+
+        // Summary: First h2 and next 2-3 elements
+        const summaryElements = allElements.slice(h2Index, h2Index + 4);
+        summaryContent = summaryElements.map(el => el.outerHTML).join('');
+
+        // Expanded: Everything after summary
+        const expandedElements = allElements.slice(h2Index + 4);
+        if (expandedElements.length > 0) {
+            expandedContent = expandedElements.map(el => el.outerHTML).join('');
+        }
+    } else {
+        // If no h2, just split by paragraphs
+        const paragraphs = tempDiv.querySelectorAll('p');
+        if (paragraphs.length > 2) {
+            summaryContent = Array.from(paragraphs).slice(0, 2).map(p => p.outerHTML).join('');
+            expandedContent = Array.from(paragraphs).slice(2).map(p => p.outerHTML).join('');
+        } else {
+            summaryContent = html;
+        }
+    }
+
+    // Build collapsible HTML
+    if (expandedContent) {
+        const uniqueId = targetElementId + '-expanded';
+        element.innerHTML = `
+            <div class="ai-summary">${summaryContent}</div>
+            <div id="${uniqueId}" class="ai-expanded hidden">${expandedContent}</div>
+            <button onclick="toggleAIExpanded('${uniqueId}', this)" class="mt-4 px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-semibold transition flex items-center gap-2 mx-auto">
+                <span class="expand-text">Show More Analysis</span>
+                <svg class="w-4 h-4 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+        `;
+    } else {
+        element.innerHTML = html;
+    }
+
+    element.classList.add('ai-results');
+}
+
+/**
+ * Toggle expanded AI content
+ */
+function toggleAIExpanded(contentId, button) {
+    const content = document.getElementById(contentId);
+    const text = button.querySelector('.expand-text');
+    const icon = button.querySelector('.expand-icon');
+
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        content.classList.add('ai-fade-in');
+        text.textContent = 'Show Less';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        content.classList.add('hidden');
+        content.classList.remove('ai-fade-in');
+        text.textContent = 'Show More Analysis';
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+
 // Export for use in other files
 window.renderAIResponse = renderAIResponse;
+window.renderCollapsibleAIResponse = renderCollapsibleAIResponse;
+window.toggleAIExpanded = toggleAIExpanded;
 window.replaceIconPlaceholders = replaceIconPlaceholders;
