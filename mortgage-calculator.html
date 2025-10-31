@@ -844,7 +844,19 @@ Generate structured mortgage insights following ZenCalcs AI format with icon pla
                     })
                 });
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('AI Insights API Error:', errorData);
+                    throw new Error(errorData.error || 'API request failed');
+                }
+
                 const result = await response.json();
+
+                if (!result.response) {
+                    console.error('No response in AI Insights result:', result);
+                    throw new Error('No response from AI');
+                }
+
                 renderCollapsibleAIResponse(result.response, 'aiInsights');
             } catch (error) {
                 console.error('AI Insights error:', error);
@@ -944,12 +956,35 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                     })
                 });
 
+                // Check if response is ok
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    throw new Error(errorData.error || 'API request failed');
+                }
+
                 const result = await response.json();
+
+                // Check if we have a response
+                if (!result.response) {
+                    console.error('No response in result:', result);
+                    throw new Error('No response from AI');
+                }
+
+                // Create container and render
                 responseArea.innerHTML = `<h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4><div id="aiToolResponse"></div>`;
-                renderCollapsibleAIResponse(result.response, 'aiToolResponse');
+
+                // Use setTimeout to ensure DOM is ready
+                setTimeout(() => {
+                    renderCollapsibleAIResponse(result.response, 'aiToolResponse');
+                }, 0);
             } catch (error) {
                 console.error('AI Tool error:', error);
-                responseArea.innerHTML = '<h4 class="text-lg font-bold text-red-600">Analysis temporarily unavailable</h4><p class="text-gray-600 mt-2">Please try again in a moment.</p>';
+                responseArea.innerHTML = `
+                    <h4 class="text-lg font-bold text-red-600">Analysis temporarily unavailable</h4>
+                    <p class="text-gray-600 mt-2">Please try again in a moment.</p>
+                    <p class="text-xs text-gray-500 mt-2">Error: ${error.message}</p>
+                `;
             }
         }
 
