@@ -1148,17 +1148,15 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
             } else {
                 // Show placeholder if not calculated yet
                 currentMortgageData = null;
-                document.getElementById('resultsContainer').innerHTML = `
-                    <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
-                        <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
-                            <div class="flex items-center gap-3 mb-2">
-                                <img src="assets/icons/calculator.svg" alt="" class="icon text-white">
-                                <h3 class="text-xl font-bold">Calculate This Scenario</h3>
-                            </div>
-                            <p class="text-brand-50 text-sm">Adjust the values and click Calculate Mortgage to see results</p>
-                        </div>
-                    </div>
-                `;
+
+                // Just toggle visibility - don't replace HTML
+                const placeholderState = document.getElementById('placeholderState');
+                const resultsCalculated = document.getElementById('resultsCalculated');
+
+                if (placeholderState && resultsCalculated) {
+                    placeholderState.classList.remove('hidden');
+                    resultsCalculated.classList.add('hidden');
+                }
             }
         }
 
@@ -1214,7 +1212,19 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 return;
             }
 
+            // IMPORTANT: Save current scenario data before creating new one
+            if (scenarios[currentScenarioIndex] !== undefined && currentMortgageData) {
+                scenarios[currentScenarioIndex].data = currentMortgageData;
+
+                // Save AI insights HTML
+                const aiInsightsElement = document.getElementById('aiInsights');
+                if (aiInsightsElement) {
+                    scenarios[currentScenarioIndex].data.aiInsightsHTML = aiInsightsElement.innerHTML;
+                }
+            }
+
             // Create new scenario index
+            const oldScenarioIndex = currentScenarioIndex;
             currentScenarioIndex = scenarios.length;
 
             // Create new tab
@@ -1253,18 +1263,14 @@ Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
                 document.getElementById('createScenarioBtn').classList.add('hidden');
             }
 
-            // Show placeholder
-            document.getElementById('resultsContainer').innerHTML = `
-                <div id="placeholderState" class="bg-white rounded-2xl shadow-lg overflow-hidden" style="min-height: 650px;">
-                    <div class="bg-gradient-to-r from-brand-500 to-brand-600 p-6 text-white">
-                        <div class="flex items-center gap-3 mb-2">
-                            <img src="assets/icons/calculator.svg" alt="" class="icon text-white">
-                            <h3 class="text-xl font-bold">Calculate This Scenario</h3>
-                        </div>
-                        <p class="text-brand-50 text-sm">Adjust the values and click Calculate Mortgage to see results</p>
-                    </div>
-                </div>
-            `;
+            // Show placeholder - just toggle visibility, don't replace HTML
+            const placeholderState = document.getElementById('placeholderState');
+            const resultsCalculated = document.getElementById('resultsCalculated');
+
+            if (placeholderState && resultsCalculated) {
+                placeholderState.classList.remove('hidden');
+                resultsCalculated.classList.add('hidden');
+            }
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
