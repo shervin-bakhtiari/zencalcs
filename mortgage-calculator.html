@@ -645,9 +645,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages: [{
-                            role: 'user',
-                            content: `Analyze this mortgage and provide 2-3 paragraphs of insights:
+                        message: `Analyze this mortgage and provide 2-3 paragraphs of insights:
 
 Home Price: ${formatCurrency(data.homePrice)}
 Down Payment: ${formatCurrency(data.downPayment)} (${((data.downPayment/data.homePrice)*100).toFixed(1)}%)
@@ -659,7 +657,6 @@ Total Interest: ${formatCurrency(data.totalInterest)}
 Total Paid: ${formatCurrency(data.totalPaid)}
 
 Explain what these numbers mean, highlight the interest proportion, and suggest one optimization.`
-                        }]
                     })
                 });
 
@@ -680,16 +677,13 @@ Explain what these numbers mean, highlight the interest proportion, and suggest 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages: [{
-                            role: 'user',
-                            content: `Generate a concise 2-3 sentence plain-language summary of this mortgage:
+                        message: `Generate a concise 2-3 sentence plain-language summary of this mortgage:
 
 Monthly Payment: ${formatCurrency(data.monthlyPayment)}
 Total Interest: ${formatCurrency(data.totalInterest)}
 Loan Term: ${data.loanTerm} years
 
 Make it conversational and focus on what the user should know most. Start directly with the insight, no greeting.`
-                        }]
                     })
                 });
 
@@ -756,7 +750,7 @@ MORTGAGE CONTEXT:
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        messages: [{ role: 'user', content: prompts[toolType] }]
+                        message: prompts[toolType]
                     })
                 });
 
