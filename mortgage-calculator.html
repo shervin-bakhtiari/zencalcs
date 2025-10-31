@@ -49,6 +49,7 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
         h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
@@ -105,6 +106,96 @@
             .navbar { padding: 10px 15px; }
             .search-box { display: none !important; }
             .logo { height: 32px; }
+        }
+
+        /* AI Results Styling */
+        .ai-results {
+            line-height: 1.7;
+            font-size: 1rem;
+            color: #1f2937;
+        }
+
+        .ai-results h2 {
+            color: #1e3a8a;
+            margin-top: 1.6em;
+            margin-bottom: 0.8em;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-results h3 {
+            color: #374151;
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .ai-results p {
+            margin-bottom: 0.8em;
+            line-height: 1.8;
+        }
+
+        .ai-results ul, .ai-results ol {
+            margin: 0.8em 0;
+            padding-left: 1.8em;
+        }
+
+        .ai-results li {
+            margin-bottom: 0.5em;
+            line-height: 1.7;
+        }
+
+        .ai-results strong {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .ai-results blockquote {
+            background: #eef2ff;
+            border-left: 4px solid #3b82f6;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin: 1.2em 0;
+            font-weight: 500;
+            color: #1e40af;
+        }
+
+        .ai-results blockquote p {
+            margin: 0;
+        }
+
+        .ai-results .inline-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 4px;
+            color: currentColor;
+        }
+
+        .ai-results hr {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 1.5em 0;
+        }
+
+        /* Responsive AI results */
+        @media (max-width: 768px) {
+            .ai-results {
+                font-size: 0.95rem;
+            }
+
+            .ai-results h2 {
+                font-size: 1.2rem;
+            }
+
+            .ai-results h3 {
+                font-size: 1.05rem;
+            }
         }
     </style>
 </head>
@@ -653,23 +744,24 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: `Analyze this mortgage and provide 2-3 paragraphs of insights:
-
+                        message: `User Inputs:
 Home Price: ${formatCurrency(data.homePrice)}
 Down Payment: ${formatCurrency(data.downPayment)} (${((data.downPayment/data.homePrice)*100).toFixed(1)}%)
-Loan Amount: ${formatCurrency(data.loanAmount)}
 Interest Rate: ${data.interestRate}%
 Loan Term: ${data.loanTerm} years
+
+Results:
+Loan Amount: ${formatCurrency(data.loanAmount)}
 Monthly Payment: ${formatCurrency(data.monthlyPayment)}
 Total Interest: ${formatCurrency(data.totalInterest)}
 Total Paid: ${formatCurrency(data.totalPaid)}
 
-Explain what these numbers mean, highlight the interest proportion, and suggest one optimization.`
+Generate structured mortgage insights following ZenCalcs AI format with icon placeholders.`
                     })
                 });
 
                 const result = await response.json();
-                insightsDiv.innerHTML = `<div class="prose prose-blue max-w-none">${result.response.replace(/\n\n/g, '</p><p class="mt-4">')}</p></div>`;
+                renderAIResponse(result.response, 'aiInsights');
             } catch (error) {
                 console.error('AI Insights error:', error);
                 insightsDiv.innerHTML = `<p>Your monthly payment of ${formatCurrency(data.monthlyPayment)} includes both principal and interest. Over ${data.loanTerm} years, you'll pay ${formatCurrency(data.totalInterest)} in interest (${((data.totalInterest/data.loanAmount)*100).toFixed(0)}% of the loan amount).</p><p class="mt-4">Consider increasing your down payment or choosing a shorter term to reduce total interest costs.</p>`;
@@ -685,18 +777,18 @@ Explain what these numbers mean, highlight the interest proportion, and suggest 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        message: `Generate a concise 2-3 sentence plain-language summary of this mortgage:
+                        message: `Generate a concise 2-3 sentence plain-language summary for this mortgage:
 
 Monthly Payment: ${formatCurrency(data.monthlyPayment)}
 Total Interest: ${formatCurrency(data.totalInterest)}
 Loan Term: ${data.loanTerm} years
 
-Make it conversational and focus on what the user should know most. Start directly with the insight, no greeting.`
+Keep it conversational and highlight the key takeaway. No headers or icons needed for this summary.`
                     })
                 });
 
                 const result = await response.json();
-                summaryDiv.innerHTML = `<p>${result.response}</p>`;
+                renderAIResponse(result.response, 'summaryText');
             } catch (error) {
                 console.error('What This Means error:', error);
                 const interestPercent = ((data.totalInterest / data.loanAmount) * 100).toFixed(0);
@@ -731,23 +823,23 @@ Make it conversational and focus on what the user should know most. Start direct
                 return;
             }
 
-            const contextData = `
-MORTGAGE CONTEXT:
-- Home Price: ${formatCurrency(currentMortgageData.homePrice)}
-- Down Payment: ${formatCurrency(currentMortgageData.downPayment)} (${((currentMortgageData.downPayment/currentMortgageData.homePrice)*100).toFixed(1)}%)
-- Loan Amount: ${formatCurrency(currentMortgageData.loanAmount)}
-- Interest Rate: ${currentMortgageData.interestRate}%
-- Loan Term: ${currentMortgageData.loanTerm} years
-- Monthly Payment: ${formatCurrency(currentMortgageData.monthlyPayment)}
-- Total Interest: ${formatCurrency(currentMortgageData.totalInterest)}
-- Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}
-`;
+            const contextData = `User Inputs:
+Home Price: ${formatCurrency(currentMortgageData.homePrice)}
+Down Payment: ${formatCurrency(currentMortgageData.downPayment)} (${((currentMortgageData.downPayment/currentMortgageData.homePrice)*100).toFixed(1)}%)
+Interest Rate: ${currentMortgageData.interestRate}%
+Loan Term: ${currentMortgageData.loanTerm} years
+
+Results:
+Loan Amount: ${formatCurrency(currentMortgageData.loanAmount)}
+Monthly Payment: ${formatCurrency(currentMortgageData.monthlyPayment)}
+Total Interest: ${formatCurrency(currentMortgageData.totalInterest)}
+Total Paid: ${formatCurrency(currentMortgageData.totalPaid)}`;
 
             const prompts = {
-                explain: `${contextData}\nExplain in simple, conversational terms what this mortgage means. Break down the monthly payment and how the payment allocation changes over time. Be specific with numbers.`,
-                optimize: `${contextData}\nI want to save money on this mortgage. Suggest 2-3 specific, actionable optimizations with estimated savings. For example: "Increase down payment by $X to save $Y" or "Refinance at X% to save $Y monthly". Be concrete and calculate actual numbers.`,
-                compare: `${contextData}\nCompare this ${currentMortgageData.loanTerm}-year mortgage with 15-year and 20-year alternatives. Calculate exact monthly payments and total interest for each option. Show me which option saves the most and by how much.`,
-                buyvsrent: `${contextData}\nCompare buying this home versus renting for the same period. Assume monthly rent is ${formatCurrency(currentMortgageData.monthlyPayment * 0.7)}. Consider equity buildup, tax benefits, and opportunity cost. Give me a clear recommendation with numbers.`
+                explain: `${contextData}\n\nExplain this mortgage in simple terms following ZenCalcs AI format. Break down the payment allocation and how it changes over time. Use icon placeholders.`,
+                optimize: `${contextData}\n\nSuggest 2-3 specific mortgage optimizations with estimated savings following ZenCalcs AI format. Calculate actual numbers for each strategy. Use icon placeholders.`,
+                compare: `${contextData}\n\nCompare this ${currentMortgageData.loanTerm}-year mortgage with 15-year and 20-year alternatives following ZenCalcs AI format. Calculate exact monthly payments and total interest for each term. Use icon placeholders.`,
+                buyvsrent: `${contextData}\n\nCompare buying this home vs renting (assume rent: ${formatCurrency(currentMortgageData.monthlyPayment * 0.7)}/month) following ZenCalcs AI format. Include equity buildup, tax benefits, and opportunity cost. Use icon placeholders.`
             };
 
             const titles = {
@@ -769,10 +861,8 @@ MORTGAGE CONTEXT:
                 });
 
                 const result = await response.json();
-                responseArea.innerHTML = `
-                    <h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4>
-                    <div class="text-gray-700 leading-relaxed prose prose-sm max-w-none">${result.response.replace(/\n\n/g, '</p><p class="mt-3">')}</p></div>
-                `;
+                responseArea.innerHTML = `<h4 class="text-lg font-bold text-brand-700 mb-3">${titles[toolType]}</h4><div id="aiToolResponse"></div>`;
+                renderAIResponse(result.response, 'aiToolResponse');
             } catch (error) {
                 console.error('AI Tool error:', error);
                 responseArea.innerHTML = '<h4 class="text-lg font-bold text-red-600">Analysis temporarily unavailable</h4><p class="text-gray-600 mt-2">Please try again in a moment.</p>';
@@ -820,5 +910,8 @@ MORTGAGE CONTEXT:
             }
         });
     </script>
+
+    <!-- AI Response Renderer -->
+    <script src="js/ai-renderer.js"></script>
 </body>
 </html>
